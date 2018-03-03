@@ -15,8 +15,12 @@ end
 CPPEXT = '.cpp'
 HEXT = '.h'
 HPPEXT = '.hpp'
-SOURCE_EXTS = [ CPPEXT, HEXT, HPPEXT ].freeze
-SOURCE_EXT_PREDICATES = SOURCE_EXTS.map { |ext| [ext, -> (f) { f.to_s.end_with?(ext) }] }.to_h.freeze
+SOURCE_EXTS = [CPPEXT, HEXT, HPPEXT].freeze
+SOURCE_EXT_PREDICATES =
+  SOURCE_EXTS
+  .map { |ext| [ext, ->(f) { f.to_s.end_with?(ext) }] }
+  .to_h
+  .freeze
 
 def cpp?
   SOURCE_EXT_PREDICATES[CPPEXT]
@@ -41,9 +45,9 @@ def stem(source)
   parent = source.dirname
   basename =
     SOURCE_EXT_PREDICATES
-      .select { |_, pred| pred.call(source) }
-      .map { |ext, _| source.basename(ext) }
-      .first
+    .select { |_, pred| pred.call(source) }
+    .map { |ext, _| source.basename(ext) }
+    .first
   parent + basename
 end
 
