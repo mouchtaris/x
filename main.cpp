@@ -5,6 +5,8 @@
 
 #include "is_numeric.h"
 #include "next.h"
+#include "equal.h"
+#include "range.hpp"
 
 using std::optional;
 
@@ -20,23 +22,11 @@ using std::optional;
 //
 // equal.h
 //
-template <typename T> struct Equal;
-template <typename T> bool equal(T a, T b) { return Equal<T> { }(std::move(a), std::move(b)); }
 
 
 //
 // range.h
 //
-template <typename T, typename C>
-void range(const T from, const T to, const C callback)
-{
-    callback(from);
-    if (equal(from, to))
-        return;
-    auto&& n = next(from);
-    if (n.has_value())
-        range(n.value(), std::move(to), std::move(callback));
-}
 
 //
 // next_numeric.h

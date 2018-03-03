@@ -14,6 +14,13 @@ end
 
 CPPEXT = '.cpp'
 HEXT = '.h'
+HPPEXT = '.hpp'
+SOURCE_EXTS = [ CPPEXT, HEXT, HPPEXT ].freeze
+SOURCE_EXT_PREDICATES = SOURCE_EXTS.map { |ext| [ext, -> (f) { f.to_s.end_with?(ext) }] }.to_h.freeze
+
+def cpp?
+  SOURCE_EXT_PREDICATES[CPPEXT]
+end
 
 ROOT = Pathname.new('.')
 REAL_ROOT = ROOT.realpath
@@ -22,16 +29,8 @@ def file?
   :file?.to_proc
 end
 
-def cpp?
-  ->(f) { f.to_s.end_with? CPPEXT }
-end
-
-def header?
-  ->(f) { f.to_s.end_with? HEXT }
-end
-
 def source_ext?
-  ->(f) { cpp?.call(f) || header?.call(f) }
+  ->(f) { SOURCE_EXT_PREDICATES.any? { |_, pred| pred.call(f) } }
 end
 
 def source?
@@ -41,11 +40,10 @@ end
 def stem(source)
   parent = source.dirname
   basename =
-    case source
-    when cpp? then source.basename CPPEXT
-    when header? then source.basename HEXT
-    else raise "What is this #{source.inspect}"
-    end
+    SOURCE_EXT_PREDICATES
+      .select { |_, pred| pred.call(source) }
+      .map { |ext, _| source.basename(ext) }
+      .first
   parent + basename
 end
 
