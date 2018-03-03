@@ -89,7 +89,7 @@ def genmake(into)
   pline.call "main: #{objects}\n\t#{CXX} -o main #{objects}"
   CPPS
     .map(&method(:build_arguments))
-    .map { |_source, object, args| "#{object}:\n\t#{args.join ' '}" }
+    .map { |source, object, args| "#{object}: #{source}\n\t#{args.join ' '}" }
     .each(&pline)
   pline.call '.PHONY: clean all'
 end
