@@ -96,8 +96,7 @@ def genmake(into)
   pline.call '.PHONY: clean all'
 end
 
-def compiledb_entry(*args)
-  source, _object, command_args = args
+def compiledb_entry(source, _object, command_args)
   {
     arguments: command_args,
     directory: REAL_ROOT.to_s,
@@ -108,8 +107,8 @@ end
 def gencompiledb(into)
   db = SOURCES
        .map(&method(:build_arguments))
-       .map(&method(:compiledb_entry))
-  JSON.dump(db, into)
+       .map { |s, o, a| compiledb_entry(s, o, a) }
+  into.write(JSON.pretty_generate(db))
 end
 
 File.open('GNUmakefile', 'w', &method(:genmake))
