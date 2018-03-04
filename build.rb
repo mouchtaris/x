@@ -6,7 +6,7 @@ require 'pp'
 require 'json'
 
 CXX = 'g++'
-CXXFLAGS = %w[-pedantic -std=c++1z -Wall -Wextra -O0 -Isrc].freeze
+CXXFLAGS = %w[-pedantic -std=c++1z -Wall -Wextra -O0 -g -Isrc].freeze
 
 def cxxflags
   CXXFLAGS.join ' '
