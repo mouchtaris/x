@@ -6,7 +6,7 @@ TokenDefinition Constructor<TokenDefinition>::create(
 ) {
     return {
         name,
-        std::regex(rx)
+        std::regex(std::string("^") + rx)
     };
 }
 
