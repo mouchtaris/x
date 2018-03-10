@@ -2,42 +2,31 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <functional>
 #include <regex>
 
 using std::begin;
 using std::end;
+using std::cbegin;
+using std::cend;
 using std::get;
 using std::rbegin;
 using std::rend;
+using namespace std::placeholders;
+
+#include "construct.hpp"
+#include "tokens.hpp"
 
 constexpr std::initializer_list<std::tuple<char const*, char const*>> TokensSource = {
     { "ident", "\\w+" },
     { "space", "\\s+" },
+    { "lbrace", "<" },
+    { "rbrace", ">" }
 };
-
-using TokenDefinition = std::tuple<std::string, std::regex>;
-using Tokens =   
-struct Tokens
-{
-    std::vector<TokenDefinition> tokens;
-};
-
-void reads() {
-    std::istringstream sin { "hello\ni am bob\n" };
-    std::ifstream fin { "src/either.x" };
-    std::string line;
-    while (sin) {
-        std::getline(sin, line);
-        std::cout << " Line: " << line <<'\n';
-    }
-    while (fin) {
-        std::getline(fin, line);
-        std::cout << "FLine: " << line << '\n';
-    }
-}
 
 int main(int, char**)
 {
-    reads();
+    for (auto const& def: construct<Tokens>(TokensSource).tokens)
+        std::cout << def.name << '\n';
     return 0;
 }
