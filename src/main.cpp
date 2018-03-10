@@ -4,6 +4,7 @@
 #include <fstream>
 #include <functional>
 #include <regex>
+#include <optional>
 
 using std::begin;
 using std::end;
@@ -12,6 +13,9 @@ using std::cend;
 using std::get;
 using std::rbegin;
 using std::rend;
+using std::move;
+using std::forward;
+using std::getline;
 using namespace std::placeholders;
 
 #include "construct.hpp"
@@ -42,28 +46,100 @@ namespace parse
     {
         init,
     };
+    constexpr char const* StateNames[] = {
+        "init",
+    };
 
     struct Parser
     {
         const Tokens tokens;
+        std::istream& ins;
+
         enum State state;
+        std::optional<std::string> error;
+        std::string line;
+        Token token;
 
-        void parse(std::istream& in);
-        void parse_line();
+        bool __dummy;
+
+        Parser(Tokens&& tokens, std::istream& ins):
+            tokens { move(tokens) },
+            ins { ins },
+            state { State::init },
+            error { std::nullopt },
+            line { },
+            token { },
+            __dummy { false }
+            { }
+
+
+        struct ParseAutoContext
+        {
+            std::function<void ()> pre, post;
+            inline void operator() (ParseAutoContext const&) { }
+        };
+
+        bool has_error() const;
+
+        void parse();
+        bool is_end();
+        bool parse_line();
+        bool fill_line_buffer();
+        void pre_parse_hook();
+        void post_parse_hook();
+
+        bool parse_ident();
+        void consume_space();
+
     };
-}
-template <> struct Constructor<parse::Parser>
-{
-    static parse::Parser create()
+
+#   define  CTX     ParseAutoContext _parse_auto_context = {\
+                        [this] () { pre_parse_hook(); }, \
+                        [this] () { post_parse_hook(); } \
+                    }; \
+                    _parse_auto_context(_parse_auto_context)
+
+    void Parser::post_parse_hook()
     {
-        return { };
     }
 
-    static parse::Parser create(Tokens&& tokens)
+    void Parser::pre_parse_hook()
     {
-        return { std::move(tokens) , { } };
+        consume_space();
     }
-};
+
+    bool Parser::fill_line_buffer()
+    {
+        if (!line.empty())
+            return true;
+
+        if (!ins)
+            return false;
+
+        getline(ins, line);
+
+        return !!ins;
+    }
+
+    bool Parser::parse_line()
+    {
+        return 
+            fill_line_buffer() &&
+            parse_ident() &&
+            true;
+    }
+
+    void Parser::parse()
+    {
+        while (!is_end())
+            parse_line();
+    }
+
+    bool Parser::has_error() const
+    {
+        return error.has_value();
+    }
+}
 
 int main(int, char**)
 {
