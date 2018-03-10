@@ -4,6 +4,7 @@
 #include <regex>
 
 #include "tokens.h"
+#include "typetype.hpp"
 
 struct TokenDefinition
 {
@@ -18,7 +19,10 @@ template <> struct Constructor<TokenDefinition>
 
 struct Tokens
 {
-    std::vector<TokenDefinition> tokens;
+    std::map<
+        fieldtype(TokenDefinition, name),
+        TokenDefinition
+    > tokens;
 };
 
 template <> struct Constructor<Tokens>

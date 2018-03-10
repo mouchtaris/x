@@ -21,6 +21,11 @@ using namespace std::placeholders;
 #include "construct.hpp"
 #include "tokens.hpp"
 
+#define T(id) constexpr auto t##id = #id
+T(struct);
+T(bool);
+#undef T
+
 constexpr std::initializer_list<std::tuple<char const*, char const*>> TokensSource = {
     { "struct", "struct" },
     { "bool", "bool" },
@@ -58,7 +63,7 @@ namespace parse
         enum State state;
         std::optional<std::string> error;
         std::string line;
-        Token token;
+        std::optional<Token> token;
 
         bool __dummy;
 
@@ -68,10 +73,9 @@ namespace parse
             state { State::init },
             error { std::nullopt },
             line { },
-            token { },
+            token { std::nullopt },
             __dummy { false }
             { }
-
 
         struct ParseAutoContext
         {
@@ -80,6 +84,7 @@ namespace parse
         };
 
         bool has_error() const;
+
 
         void parse();
         bool is_end();
@@ -90,7 +95,6 @@ namespace parse
 
         bool parse_ident();
         void consume_space();
-
     };
 
 #   define  CTX     ParseAutoContext _parse_auto_context = {\
