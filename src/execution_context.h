@@ -7,6 +7,9 @@ namespace execution_context {
     struct data {
         using buffer_t = std::vector<joblet>;
 
+        data() = default;
+        data(data const&()) = delete;
+
         buffer_t front, back;
         bool flipped = false;
     };
