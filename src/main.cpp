@@ -15,6 +15,10 @@ int main(int, char**)
     execution_context::data ec;
     enqueue(ec, std::bind(println, "Hello"));
     enqueue(ec, std::bind(println, "this is the end"));
+    enqueue(ec, [&ec]() {
+        println("I will enqueue you to death");
+        enqueue(ec, std::bind(println, "This is seconaryu"));
+    });
     run_all(ec);
     std::cout.flush();
     std::cerr.flush();
