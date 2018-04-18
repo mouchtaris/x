@@ -7,6 +7,7 @@
 #include "joblet.h"
 #include "static_assert.h"
 #include "dbg.h"
+#include "dbtostr.h"
 
 namespace execution_context {
 
@@ -43,13 +44,19 @@ namespace execution_context {
     }
 
     inline void run_all(data& d) {
+        dblog("running all");
         do {
+            dblog("flipping");
             flip(d);
             auto& buf = back(d);
             const auto i = begin(buf);
             const auto j = end(buf);
             const auto f = std::mem_fun_ref(&joblet::operator ());
+            dblog("foreaching");
             std::for_each(i, j, f);
+            dblog(has_pending(d)? "has pending" : "does not has pending");
+            dblog(dbtostr(front(d).size()).c_str());
+            dblog(dbtostr(back(d).size()).c_str());
         } while (has_pending(d));
     }
 
