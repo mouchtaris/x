@@ -1,10 +1,12 @@
 #pragma once
-#include <vector>
-#include <utility>
 #include <algorithm>
+#include <functional>
 #include <type_traits>
-#include "static_assert.h"
+#include <utility>
+#include <vector>
 #include "joblet.h"
+#include "static_assert.h"
+#include "dbg.h"
 
 namespace execution_context {
 
@@ -19,6 +21,10 @@ namespace execution_context {
         d.flipped = !d.flipped;
     }
 
+    inline data::buffer_t& back(data& d) {
+        return d.flipped? d.front : d.back;
+    }
+
     inline data::buffer_t const& back(data const& d) {
         return d.flipped? d.front : d.back;
     }
@@ -27,8 +33,8 @@ namespace execution_context {
         return d.flipped? d.back : d.front;
     }
 
-    inline bool enqueue(data& d, joblet j) {
-        front(d).emplace_back(std::move(j));
+    inline bool enqueue(data& d, std::function<void()> f) {
+        front(d).emplace_back( joblet { std::move(f) });
         return true;
     }
 
@@ -37,13 +43,14 @@ namespace execution_context {
     }
 
     inline void run_all(data& d) {
-        while (has_pending(d)) {
+        do {
             flip(d);
-            const auto i = begin(back(d));
-            const auto j = end(back(d));
+            auto& buf = back(d);
+            const auto i = begin(buf);
+            const auto j = end(buf);
             const auto f = std::mem_fun_ref(&joblet::operator ());
             std::for_each(i, j, f);
-        }
+        } while (has_pending(d));
     }
 
 }
