@@ -1,20 +1,16 @@
 #pragma once
-#include <vector>
-#include "joblet.h"
+#include "job_dispatcher.h"
 
 namespace execution_context {
 
-    struct data {
-        using buffer_t = std::vector<joblet>;
+    struct data:
+        public job_dispatcher::data
+    { };
 
-        data() = default;
-        data(data const&()) = delete;
-
-        buffer_t front, back;
-        bool flipped = false;
-    };
+    void initialize(data& d);
+    void finalize(data& d);
+    void run_all(data& d);
 
     bool enqueue(data& d, std::function<void()> f);
-    void run_all(data& d);
 
 }

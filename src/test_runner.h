@@ -2,7 +2,7 @@
 #include "test::Test.h"
 #include "dbg.h"
 template <typename S>
-void run_test(test::Test<S> test) {
+void run_test(test::Test<S>& test) {
     test.run();
     dblog((
         std::string("Running test ") +

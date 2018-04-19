@@ -16,6 +16,9 @@ CXXFLAGS = %w[
   -Isrc
   -ftemplate-backtrace-limit=0
 ].freeze
+LDFLAGS = %w[
+  -lpthread
+]
 
 def cxxflags
   CXXFLAGS.join ' '
@@ -92,6 +95,10 @@ def build_arguments(source)
   ]
 end
 
+def ld_flags
+  LDFLAGS.join(' ')
+end
+
 def genmake(into)
   objects = OBJECTS.join ' '
 
@@ -99,7 +106,7 @@ def genmake(into)
 
   pline.call "all: main\n\t./main"
   pline.call "clean:\n\trm -rfv main #{objects}"
-  pline.call "main: #{objects}\n\t#{CXX} -o main #{objects}"
+  pline.call "main: #{objects}\n\t#{CXX} -o main #{objects} #{ld_flags}"
   CPPS
     .map(&method(:build_arguments))
     .map { |source, object, args| "#{object}: #{source}\n\t#{args.join ' '}" }
