@@ -1,4 +1,5 @@
 #include "execution_context_spec.h"
+#include "eval.h"
 
 namespace execution_context_spec
 {
@@ -12,7 +13,7 @@ void initialize(data& d)
 
 void setup(data& d)
 {
-    initialize(sync_ec(d));
+    eval(execution_context::initialize_t { std::ref(sync_ec(d)) });
 }
 
 void run(data& d)
@@ -20,21 +21,21 @@ void run(data& d)
     sync_t& ec = sync_ec(d);
 
     // Enqueue a job that calls the direct spy
-    dispatch(ec, {
+    eval(execution_context::dispatch_t { std::ref(ec), job_t {
         "direct spy calling",
         [&d](){ direct_spy(d)(); }
-    });
+    } });
 
     // Enqueue a job that calls the indirect spy (indirectly)
-    dispatch(ec, {
+    eval(execution_context::dispatch_t { std::ref(ec), job_t {
         "indirect spy calling job",
         [&ec, &d]() {
-            dispatch(ec, {
+            eval(execution_context::dispatch_t { std::ref(ec), job_t {
                 "indirect spy calling",
                 [&d]() { indirect_spy(d)(); }
-            });
+            } });
         }
-    });
+    } });
 }
 
 bool check(data d)

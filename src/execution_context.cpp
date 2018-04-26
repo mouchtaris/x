@@ -3,16 +3,18 @@
 namespace execution_context
 {
 
-void initialize(sync_t&)
+void eval_(initialize_t)
 {
 }
 
-void cleanup(sync_t&)
+
+void eval_(cleanup_t)
 {
 }
 
-void dispatch(sync_t, job_t j)
+void eval_(dispatch_t command)
 {
+    job_t& j = std::get<1>(command.as_base());
     func(j)();
 }
 
