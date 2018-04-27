@@ -1,5 +1,6 @@
 #include "eval.h"
 #include <mutex>
+#include <iostream>
 
 namespace
 {
@@ -8,5 +9,6 @@ namespace
 
 void on_eval(char const* name)
 {
-    std::lock_
+    std::lock_guard<std::mutex> lock { mutex };
+    std::cerr << name << '\n';
 }
