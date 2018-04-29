@@ -4,13 +4,10 @@
 #include <functional>
 #include <ostream>
 #include "write::tuple.h"
+#include "tagname.h"
 
 namespace command
 {
-
-    // -- Private details --
-    extern std::string __command_name(char const*);
-    // -- Private details --
 
     template <
         typename _tag,
@@ -35,7 +32,7 @@ namespace command
     {
         std::reference_wrapper<const data<tag, args...>> d;
 
-        std::string name() const { return __command_name(__PRETTY_FUNCTION__); }
+        std::string name() const { return tagname::of<tag>().at(0); }
     };
 
     template <
