@@ -4,23 +4,22 @@
 #include "command.h"
 #include "write::tuple.h"
 #include "type.h"
+#include "printf.h"
 #include "tagname.h"
+#include "s.h"
 
-struct name: public type::string_tag_t {
-    static name t;
-};
-name name::t;
+struct poo;
+using poo_t = tagged_value::data<poo, int>;
 
-struct id: public type::uint_tag_t {
-    static id t;
-};
-id id::t;
-
-struct user {};
-using user_t = type::tuple<user, id, name>;
+template <typename... Ts>
+decltype(auto) t(Ts&&... args)
+{
+    return std::make_tuple(std::forward<Ts>(args)...);
+}
 
 int main(int, char**)
 {
-    type::traits(id::t);
+    poo_t i { 12 };
+    std::cout << get(i) << '\n';
     return 0;
 }

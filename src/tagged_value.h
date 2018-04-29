@@ -13,4 +13,12 @@ namespace tagged_value
 
         value_t value;
     };
+
+    template <
+        typename tag,
+        typename value_type>
+    decltype(auto) get(data<tag, value_type>& d)
+    {
+        return d.value;
+    }
 }
