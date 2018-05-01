@@ -12,6 +12,10 @@ namespace tagged_value
         using value_t = _value_type;
 
         value_t value;
+
+        explicit data(value_t value):
+            value { std::move(value) }
+        { }
     };
 
     template <
