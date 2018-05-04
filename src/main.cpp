@@ -144,6 +144,8 @@ namespace vs
 //
 namespace repo
 {
+    struct id: public tagged_value::data<id, std::uint64_t> { };
+
     template <typename R>
     using items_t = std::vector<typename R::rec>;
 
@@ -167,38 +169,36 @@ namespace repo
     template <typename R>
     struct addjob
     {
-        static_assert(std::is_move_constructible_v<std::reference_wrapper<data_t<R>>>, "");
-        static_assert(std::is_move_constructible_v<typename R::rec>, "");
-        static_assert(std::is_move_constructible_v<std::promise<void>>, "");
+        using rep_t = std::reference_wrapper<data_t<R>>;
+        using rec_t = typename R::rec;
+        using prom_t = std::promise<id>;
+        static_assert(std::is_move_constructible_v<rep_t>, "");
+        static_assert(std::is_move_constructible_v<rec_t>, "");
+        static_assert(std::is_move_constructible_v<prom_t>, "");
 
-        std::reference_wrapper<data_t<R>> rep_ref;
-        typename R::rec rec;
-        std::promise<void> done;
+        rep_t rep_ref;
+        rec_t rec;
+        prom_t done;
 
         void operator()()
         {
-            std::cerr << " --- acquiring repository reference\n";
             data_t<R>& rep = rep_ref.get();
 
-            std::cerr << " --- acquiring mutex reference\n";
             std::mutex& m = mutex(rep);
-            std::cerr << " --- locking asynchronous operation\n";
             auto&& _lock = async::lock(m);
 
-            std::cerr << " --- acquiring repository items\n";
             items_t<R>& v = items(rep);
-            std::cerr << " --- emplacing record\n";
             v.emplace_back(std::move(rec));
 
-            std::cerr << " --- completing completion promise\n";
-            done.set_value();
+            auto&& i = tagged_value::make<id>(v.size() - 1);
+            done.set_value(std::move(i));
         }
     };
 
     template <typename R>
-    std::future<void> add(data_t<R>& rep, typename R::rec&& rec)
+    std::future<id> add(data_t<R>& rep, typename R::rec&& rec)
     {
-        auto&& done_promise = std::promise<void> { };
+        auto&& done_promise = std::promise<id> { };
         auto&& done_future = done_promise.get_future();
         auto&& job = addjob<R> { std::ref(rep), std::move(rec), std::move(done_promise) };
         std::thread { std::move(job) }.detach();
@@ -240,11 +240,22 @@ int main(int, char**)
     for (auto&& el: vp1)
         std::cout << el << nl;
 
+    std::vector<std::future<repo::id>> futie;
     auto&& user_repo = tagged_value::make<repo::data_t<user>>();
-    std::future<void> add_user_done = repo::add(user_repo, vs::u());
+    for (user::id::value_t i = 0; i < 100; ++i) {
+        auto&& u = make_record<user>(
+            tagged_value::make<user::id>(i + 20),
+            tagged_value::make<email>("lol@email.com")
+            );
+        futie.emplace_back(repo::add(user_repo, std::move(u)));
+    }
 
-    std::cout << "waiting for user to be added..." << nl;
-    add_user_done.wait();
-    std::cout << "waiting for user to be added is done ... " << nl;
+    for (std::size_t i = 0; i < futie.size(); ++i) {
+        auto& add_user_done = futie.at(i);
+        std::cout << "waiting for user #" << i << " to be added..." << nl;
+        add_user_done.wait();
+        std::cout << "waiting for user #" << i << " to be added is done ... id = " << add_user_done.get() << nl;
+    }
+
     return 0;
 }

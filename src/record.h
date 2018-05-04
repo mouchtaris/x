@@ -49,6 +49,12 @@ template <
     typename ...Args>
 typename rec::rec make_record(Args&&... args)
 {
-    return { std::forward<Args>(args)...  };
+    using tuple_t = typename rec::rec::value_t;
+
+    return tagged_value::make<typename rec::rec>(
+        tuple_t {
+            std::forward<Args>(args)...
+        }
+    );
 }
 
