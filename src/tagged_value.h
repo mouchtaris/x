@@ -16,10 +16,6 @@ namespace tagged_value
 
         value_t value;
 
-        explicit data(value_t&& value):
-            value { std::move(value) }
-        { }
-
         ///
         /// For descendants
         ///
@@ -31,7 +27,8 @@ namespace tagged_value
     template <
         typename tag,
         typename value_type>
-    decltype(auto) get(data<tag, value_type>& d)
+    auto get(data<tag, value_type>& d)
+        -> typename data<tag, value_type>::value_t&
     {
         return d.value;
     }
@@ -39,7 +36,8 @@ namespace tagged_value
     template <
         typename tag,
         typename value_type>
-    decltype(auto) get(data<tag, value_type> const& d)
+    auto get(data<tag, value_type> const& d)
+        -> typename data<tag, value_type>::value_t const&
     {
         return (d.value);
     }
@@ -48,8 +46,9 @@ namespace tagged_value
         typename tag,
         typename value_type>
     auto get(data<tag, value_type>&& d)
+        -> typename data<tag, value_type>::value_t
     {
-        return d.value;
+        return std::move(d.value);
     }
 
     template <
@@ -69,8 +68,8 @@ namespace tagged_value
         typename ...Args>
     _tv make(Args&&... args)
     {
-        return {
-            typename _tv::base_t {
+        return _tv {
+            typename _tv::value_t {
                 std::forward<Args>(args)...
             }
         };
