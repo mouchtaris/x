@@ -3,6 +3,8 @@
 #include "async/ec/threadpool/worker.h"
 #include "make_array.h"
 #include <thread>
+#include <algorithm>
+#include <functional>
 
 namespace async::ec::threadpool
 {
@@ -30,6 +32,17 @@ namespace async::ec::threadpool
                                             };
                                         };
         threads_t                       threads { make_array<size>(__make_thread) };
+
+        void dispatch(task::rec task) { task_channel.push(std::move(task)); }
+
+        ~data()
+        {
+            terminate();
+            cleanup();
+        }
+    private:
+        void terminate() { task_channel.close(); }
+        void cleanup() { for (auto& t: threads) if (t.joinable()) t.join(); }
     };
 
     template <size_t size>
@@ -39,12 +52,5 @@ namespace async::ec::threadpool
     auto make()
     {
         return data_t<size> { };
-    }
-
-    template <size_t size>
-    void cleanup(data_t<size>& data)
-    {
-        for (auto& thread: data.threads)
-            thread.join();
     }
 }

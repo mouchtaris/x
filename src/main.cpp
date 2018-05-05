@@ -209,6 +209,11 @@ struct std::tuple_size<T [s]>
     static constexpr auto value = s;
 };
 
+using tagged_value::make;
+using async::ec::task;
+using async::ec::job;
+using async::ec::task_channel;
+using async::ec::threadpool::worker;
 //////
 //
 // (((x * 2) + 5)) / 2 - x
@@ -222,29 +227,7 @@ void count_to_xilia() {
 }
 int main(int, char**)
 {
-    constexpr auto a = make_array<4>([](auto id){ return id; });
-    constexprsize<a.size()>();
-    for (auto&& el: a)
-        std::cout << el << nl;
-
-    using tagged_value::make;
-    auto ec = async::ec::threadpool::data_t<3u> { };
-    auto const pushaboby = [&ec](char const* name)
-    {
-        std::string closed_name { name };
-        ec.task_channel.push(
-            make_record<async::ec::task>(
-                make<async::ec::task::name>(name),
-                make<async::ec::job>([closed_name](){s("makes me cry"); s(closed_name); count_to_xilia(); s("but it is over now...");})
-            )
-        );
-    };
-    char name[] = "bobakos nr 0";
-    for (unsigned i = 0; i < 100; ++i) {
-        pushaboby(name);
-        name[std::tuple_size_v<decltype(name)> - 2] += 1;
-    }
-    ec.task_channel.close();
-    cleanup(ec);
+    auto ec = async::ec::threadpool::make<3u>();
+    ec.dispatch(make_record<task>(make<task::name>("Task1"), make<job>([](){s("And this is it");})));
     return 0;
 }
