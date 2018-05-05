@@ -10,6 +10,7 @@
 #include "copy.h"
 #include "json.h"
 #include "async.h"
+#include "async/stream.hpp"
 
 //////
 //
@@ -195,17 +196,6 @@ namespace repo
         }
     };
 
-    template <typename R>
-    std::future<id> add(data_t<R>& rep, typename R::rec&& rec)
-    {
-        auto&& done_promise = std::promise<id> { };
-        auto&& done_future = done_promise.get_future();
-        auto&& job = addjob<R> { std::ref(rep), std::move(rec), std::move(done_promise) };
-        std::thread { std::move(job) }.detach();
-        return std::move(done_future);
-    }
-
-
 }
 
 
@@ -215,47 +205,34 @@ namespace repo
 //
 int main(int, char**)
 {
-    ptag<user>();
-    ptag<user::id>();
-    ptag<user::id::base_t>();
+    auto&& s = async::stream<int> { };
+    const auto f = [&s](int id)
+    {
+        {
+            std::unique_lock<std::mutex>
+                l1 { s.mutex, std::defer_lock },
+                l2 { s.signal_.mutex, std::defer_lock };
+            std::lock(l1, l2);
 
-    std::cout 
-        << vs::id() << nl
-        << vs::em() << nl
-        << vs::u () << nl
-        << nl
-        << nl
-        << "";
-    json::dump(std::cout, vs::u());
-
-    auto&& u = vs::u();
-    std::cout
-        << gett<email>(u) << nl
-        << gett<user::id>(u) << nl
-        << "";
-
-    auto v = std::vector { 1, 2, 3 };
-    auto&& plus1 = [](int i) { return i + 1; };
-    auto vp1 = view::map(v, std::move(plus1));
-    for (auto&& el: vp1)
-        std::cout << el << nl;
-
-    std::vector<std::future<repo::id>> futie;
-    auto&& user_repo = tagged_value::make<repo::data_t<user>>();
-    for (user::id::value_t i = 0; i < 100; ++i) {
-        auto&& u = make_record<user>(
-            tagged_value::make<user::id>(i + 20),
-            tagged_value::make<email>("lol@email.com")
-            );
-        futie.emplace_back(repo::add(user_repo, std::move(u)));
-    }
-
-    for (std::size_t i = 0; i < futie.size(); ++i) {
-        auto& add_user_done = futie.at(i);
-        std::cout << "waiting for user #" << i << " to be added..." << nl;
-        add_user_done.wait();
-        std::cout << "waiting for user #" << i << " to be added is done ... id = " << add_user_done.get() << nl;
-    }
-
+            std::cout << "hello from " << id
+                << ". queueud: " << s.queue.size()
+                << " closed: " << s.signal_.closed
+                << " waiting: " << s.signal_.waiting
+                << '\n';
+        }
+        for (std::optional<int> opt = s.pull(); opt.has_value(); opt = s.pull())
+            std::cout << "[" << id << "] pulled: " << opt.value() << '\n';
+    };
+    auto&& threads = std::array<std::thread, 4> {
+        std::thread { f, 0 },
+        std::thread { f, 1 },
+        std::thread { f, 2 },
+        std::thread { f, 3 }
+    };
+    for (int i = 0; i < 100; ++i)
+        s.push(i);
+    s.close();
+    for (auto& t: threads)
+        t.join();
     return 0;
 }
