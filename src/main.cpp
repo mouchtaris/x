@@ -214,7 +214,7 @@ struct std::tuple_size<T [s]>
 // (((x * 2) + 5)) / 2 - x
 //
 void count_to_xilia() {
-    for (auto i = 0; i < 10000000; ++i) {
+    for (auto i = 0; i < 1000000; ++i) {
         char const* fmt = i % 2 == 0 ? "%06X" : "%06d";
         std::ostringstream s;
         s << std::make_tuple(fmt, i) << '\n';
@@ -228,7 +228,7 @@ int main(int, char**)
         std::cout << el << nl;
 
     using tagged_value::make;
-    auto ec = async::ec::threadpool::data_t<8u> { };
+    auto ec = async::ec::threadpool::data_t<3u> { };
     auto const pushaboby = [&ec](char const* name)
     {
         std::string closed_name { name };
@@ -240,9 +240,9 @@ int main(int, char**)
         );
     };
     char name[] = "bobakos nr 0";
-    for (unsigned i = 0; i < 3; ++i) {
+    for (unsigned i = 0; i < 100; ++i) {
         pushaboby(name);
-        name[std::tuple_size_v<decltype(name)> - 1] += 1;
+        name[std::tuple_size_v<decltype(name)> - 2] += 1;
     }
     ec.task_channel.close();
     cleanup(ec);
