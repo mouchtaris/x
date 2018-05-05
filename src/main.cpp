@@ -13,6 +13,7 @@
 #include "async.h"
 #include "async/channel.hpp"
 #include "make_array.h"
+#include "exp/sql.h"
 
 //////
 //
