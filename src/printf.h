@@ -67,14 +67,16 @@ namespace sprint
 
 
 
-
-    template <size_t bs>
-    bool s(view_t<bs> v, char const* fmt, int i)
+    template <size_t bs, typename ...Args>
+    bool __s__common(view_t<bs> v, char const* fmt, Args&&... args)
     {
         const auto bufsize = free(v);
-        const auto whbw = std::snprintf(data(v), bufsize, fmt, i);
+        const auto whbw = std::snprintf(data(v), bufsize, fmt, std::forward<Args>(args)...);
         return
             whbw > 0 &&
             static_cast<decltype(bufsize)>(whbw) < bufsize; // signedness warning
     }
+
+    template <size_t bs> bool s(view_t<bs> v, char const*           fmt, int i  ) { return __s__common(v, fmt   , i             ); }
+    template <size_t bs> bool s(view_t<bs> v, std::string const&    str         ) { return __s__common(v, "%s"  , str.c_str()   ); }
 }

@@ -3,6 +3,11 @@
 #include "tagged_value/fwd.h"
 #include "tagged_value/write.h"
 
+#define TAGGED_VALUE(name, type)                \
+    struct name:                                \
+        public tagged_value::data<name, type>   \
+    { }
+
 namespace tagged_value
 {
     template <

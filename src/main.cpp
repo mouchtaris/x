@@ -2,6 +2,7 @@
 #include <type_traits>
 #include <algorithm>
 #include <cstdint>
+#include <sstream>
 #include "write::tuple.h"
 #include "type.h"
 #include "printf.h"
@@ -10,7 +11,8 @@
 #include "copy.h"
 #include "json.h"
 #include "async.h"
-#include "async/stream.hpp"
+#include "async/channel.hpp"
+#include "make_array.h"
 
 //////
 //
@@ -199,40 +201,50 @@ namespace repo
 }
 
 
+template <size_t> void constexprsize(){}
+
+template <typename T, size_t s>
+struct std::tuple_size<T [s]>
+{
+    static constexpr auto value = s;
+};
+
 //////
 //
 // (((x * 2) + 5)) / 2 - x
 //
+void count_to_xilia() {
+    for (auto i = 0; i < 10000000; ++i) {
+        char const* fmt = i % 2 == 0 ? "%06X" : "%06d";
+        std::ostringstream s;
+        s << std::make_tuple(fmt, i) << '\n';
+    }
+}
 int main(int, char**)
 {
-    auto&& s = async::stream<int> { };
-    const auto f = [&s](int id)
-    {
-        {
-            std::unique_lock<std::mutex>
-                l1 { s.mutex, std::defer_lock },
-                l2 { s.signal_.mutex, std::defer_lock };
-            std::lock(l1, l2);
+    constexpr auto a = make_array<4>([](auto id){ return id; });
+    constexprsize<a.size()>();
+    for (auto&& el: a)
+        std::cout << el << nl;
 
-            std::cout << "hello from " << id
-                << ". queueud: " << s.queue.size()
-                << " closed: " << s.signal_.closed
-                << " waiting: " << s.signal_.waiting
-                << '\n';
-        }
-        for (std::optional<int> opt = s.pull(); opt.has_value(); opt = s.pull())
-            std::cout << "[" << id << "] pulled: " << opt.value() << '\n';
+    using tagged_value::make;
+    auto ec = async::ec::threadpool::data_t<8u> { };
+    auto const pushaboby = [&ec](char const* name)
+    {
+        std::string closed_name { name };
+        ec.task_channel.push(
+            make_record<async::ec::task>(
+                make<async::ec::task::name>(name),
+                make<async::ec::job>([closed_name](){s("makes me cry"); s(closed_name); count_to_xilia(); s("but it is over now...");})
+            )
+        );
     };
-    auto&& threads = std::array<std::thread, 4> {
-        std::thread { f, 0 },
-        std::thread { f, 1 },
-        std::thread { f, 2 },
-        std::thread { f, 3 }
-    };
-    for (int i = 0; i < 100; ++i)
-        s.push(i);
-    s.close();
-    for (auto& t: threads)
-        t.join();
+    char name[] = "bobakos nr 0";
+    for (unsigned i = 0; i < 3; ++i) {
+        pushaboby(name);
+        name[std::tuple_size_v<decltype(name)> - 1] += 1;
+    }
+    ec.task_channel.close();
+    cleanup(ec);
     return 0;
 }

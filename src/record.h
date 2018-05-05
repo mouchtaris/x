@@ -45,16 +45,16 @@ decltype(auto) gett(record<tag, fields...> const& rec)
 }
 
 template <
-    typename rec,
+    typename R,
     typename ...Args>
-typename rec::rec make_record(Args&&... args)
+decltype(auto) make_record(Args&&... args)
 {
-    using tuple_t = typename rec::rec::value_t;
-
-    return tagged_value::make<typename rec::rec>(
-        tuple_t {
-            std::forward<Args>(args)...
+    return typename R::rec {
+        typename R::rec::base_t {
+            typename R::rec::value_t {
+                std::forward<Args>(args) ...
+            }
         }
-    );
+    };
 }
 
