@@ -10,6 +10,14 @@ class Subject
     @run = run
   end
 
+  def description
+    file_path_str, line_num = @run.source_location
+    File.open(file_path_str, 'r') do |fin|
+      lines = fin.each_line.lazy.drop(line_num - 1)
+      lines.first.strip
+    end
+  end
+
   def run!
     return if @result
     begin
@@ -43,11 +51,20 @@ class Subject
     value&.is_a? c
   end
 
+  def respond?(n)
+    value&.respond_to? n
+  end
+
   def to(check_type, *args)
     pred = method :"#{check_type}?"
     holds = pred.call(*args)
     binding.pry unless holds
-    raise (value&.ex || TestError) unless holds
+    if holds
+      puts "|| #{description} ||: ok"
+    else
+      puts "|| #{description} ||: FAIL"
+    end
+    # raise (value&.ex || TestError) unless holds
   end
 
 end

@@ -7,11 +7,12 @@ require 'json'
 
 require 'pry'
 
-require_relative 'rb/file_database'
-require_relative 'rb/test::expect'
+require_relative 'rb/tstruct'
 
-include Expect
 ###
+WorkspaceDefinition = Struct.new \
+  :root
+
 Definition = Struct.new \
   :name,
   :file_rx,
@@ -35,9 +36,7 @@ end
 categories = %i[h hpp cpp].freeze
 defs = categories.map(&make_definition_from_ext_func).to_h.freeze
 
-###
-fdb = FDB::Workspace.new(Pathname.new "#{Dir.pwd}/src")
-fdb.definition = defs[:cpp]
-pp fdb.find.to_a
-###
+### Official specs
+require_relative 'rb/tstruct_spec'
+TStructSpec.run
 
