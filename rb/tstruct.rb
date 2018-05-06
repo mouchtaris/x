@@ -1,4 +1,7 @@
-class TStruct
+require_relative 'type_comparisons'
+
+class TStructClass
+  include TypeComparisons
 
   def __accessor_name(name)
     name.to_sym
@@ -18,7 +21,7 @@ class TStruct
 
   def __modifier_impl(name, type)
     ->(val) do
-      if val.is_a? type
+      if type_comparison(val, type)
         @values[name] = val
       else
         raise ArgumentError, "#{name} must be #{type}"
@@ -48,6 +51,29 @@ class TStruct
       __define_accessor(name)
       __define_modifier(name, type)
       __define_deleter(name)
+    end
+  end
+end
+
+module TStruct
+  module_function def with_base(base, fields)
+    new(fields).tap do |result|
+      result.class_exec do
+        include base
+      end
+    end
+  end
+  module_function def new(fields)
+    initialize_impl = ->(**nargs) do
+      super(fields)
+      nargs.each do |name, value|
+        self.send(:"#{name}=", value)
+      end
+    end
+    Class.new(TStructClass).tap do |result|
+      result.class_exec do
+        define_method(:initialize, &initialize_impl)
+      end
     end
   end
 end

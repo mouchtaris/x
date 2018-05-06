@@ -13,7 +13,7 @@ module TStructSpec
     end
 
     def tstruct 
-      TStruct.new({
+      TStructClass.new({
         f1_name => f1_type
       })
     end

@@ -1,9 +1,11 @@
 # frozen-string-literal: true
+require_relative 'type_comparisons'
 
 class TestError < Exception
 end
 
 class Subject
+  include TypeComparisons
   RunResult = Struct.new(:v, :ex)
 
   def initialize(run)
@@ -48,7 +50,7 @@ class Subject
   end
 
   def be?(c)
-    value&.is_a? c
+    type_comparison(value, c) if value
   end
 
   def respond?(n)
