@@ -1,0 +1,553 @@
+[
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/__common.o",
+      "src/async/__common.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/__common.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/channel.o",
+      "src/async/channel.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/channel.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/channel.o",
+      "src/async/channel.hpp"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/channel.hpp"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/ec/job.o",
+      "src/async/ec/job.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/ec/job.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/ec/task.o",
+      "src/async/ec/task.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/ec/task.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/ec/task_channel.o",
+      "src/async/ec/task_channel.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/ec/task_channel.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/ec/threadpool/worker.o",
+      "src/async/ec/threadpool/worker.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/ec/threadpool/worker.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/ec/threadpool.o",
+      "src/async/ec/threadpool.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/ec/threadpool.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/lockable.o",
+      "src/async/lockable.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/lockable.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/signal.o",
+      "src/async/signal.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/signal.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async/signal.o",
+      "src/async/signal.hpp"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async/signal.hpp"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/async.o",
+      "src/async.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/async.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/copy.o",
+      "src/copy.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/copy.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/exp/sql.o",
+      "src/exp/sql.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/exp/sql.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/json.o",
+      "src/json.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/json.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/main.cpp"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/make_array.o",
+      "src/make_array.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/make_array.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/model.o",
+      "src/model.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/model.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/printf.o",
+      "src/printf.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/printf.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/record.o",
+      "src/record.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/record.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/s.o",
+      "src/s.cpp"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/s.cpp"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/s.o",
+      "src/s.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/s.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tagged_value/fwd.o",
+      "src/tagged_value/fwd.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tagged_value/fwd.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tagged_value/write.o",
+      "src/tagged_value/write.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tagged_value/write.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tagged_value.o",
+      "src/tagged_value.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tagged_value.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tagname.o",
+      "src/tagname.cpp"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tagname.cpp"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tagname.o",
+      "src/tagname.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tagname.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/type.o",
+      "src/type.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/type.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/write::tuple.o",
+      "src/write::tuple.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/write::tuple.h"
+  }
+]
