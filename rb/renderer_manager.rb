@@ -1,54 +1,77 @@
 require 'erb'
 require_relative 'type_comparisons'
 
+#
+# RendererManager
+#
 class RendererManager
   include TypeComparisons
 
+  #
+  # Renderer
+  #
   class Renderer
     include TypeComparisons
 
-    def initialize(template_filepath)
-      @erb = ERB.new(Fie.read(template_filepath))
-        .tap { |erb| erb.location = template_filepath }
+    def initialize(find_file, template_filepath)
+      type_check(Proc) { :find_file }
+      type_check(Pathname) { :template_filepath }
+
+      @find_file = find_file
+      @erb = ERB.new(File.read(template_filepath))
+        .tap { |erb| erb.location = template_filepath.to_s }
+    end
+
+    def full_path_dependencies(file)
+      file
+        .dependencies
+        .map(&@find_file)
+        .map(&:path)
+        .map(&:to_s)
     end
 
     def render(file)
       type_check(SourceFile) { :file }
-      @erb.run \
-        path: file.path.to_s.dup.freeze,
-        dependencies: file.dependencies.dup.freeze
+
+      @erb.result_with_hash(
+        path: file.path,
+        dependencies: full_path_dependencies(file)
+      )
     end
   end
 
-  class Renderers
-    include TypeComparisons
+  #
+  #
+  #
 
-    def initialize(renderers)
-      type_check(Symbol => Renderer) { :renderers }
-      @renderers = renderers.dup.freeze
-    end
-
-    def render(file)
-      type_check(SourceFile) { :file }
-      @renderers[file.category.name]&.render(file)
-    end
-  end
-
-  def initialize(root)
+  #
+  # @param find_file [FileName: String => SourceFile]
+  #
+  def initialize(root, find_file, category_names)
     type_check(Pathname) { :root }
     @root = root
-  end
-
-  def new_renderer(category_name)
-    Renderer.new @root + "#{category_name}.erb"
-  end
-
-  def renderers(category_names)
-    Renderers.new(
+    @renderers = 
       category_names
-        .map { |name| [name, new_renderer(name)] }
+        .map { |name| [name, new_renderer(find_file, name)] }
         .to_h
         .freeze
-    )
+    type_check(String => Renderer) { :@renderers }
+  end
+
+  def new_renderer(find_file, category_name)
+    Renderer.new find_file, @root + "#{category_name}.erb"
+  end
+
+  def render(file)
+    type_check(SourceFile) { :file }
+    @renderers[file.category.name]&.render(file)
+  end
+
+  def render_prelude
+    path = @root + '__prelude.erb'
+    ERB
+      .new(File.read(path))
+      .tap { |e| e.location = path.to_s }
+      .result
   end
 end

@@ -20,14 +20,21 @@ module WorkspaceDefinitionApi
       in_project = file_path.relative_path_from(root)
       in_src = in_project.relative_path_from(src)
       md = category.file_rx.match(in_src.to_s)
-      yield SourceFile.new(name: md[:name], path: in_project, category: category) if md
+      yield registry_add(name: md[:name], path: in_project, category: category) if md
     end
   end
 
+  def registry
+    @__workspace_definition__registry ||= {}
+  end
+
+  def registry_add(**params)
+    sf = SourceFile.new(**params)
+    registry[sf.name] = sf
+  end
+
   def new_file(name)
-    SourceFile.new \
-      name: name,
-      path: src + name
+    registry[name]
   end
 end
 

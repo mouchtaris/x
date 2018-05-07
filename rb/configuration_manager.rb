@@ -2,7 +2,7 @@ require_relative 'workspace_definition'
 
 class ConfigurationManager
   Fields = TStruct.new(
-    project_root: Pathname,
+    project_dir: Pathname,
     source_dir: Pathname,
     category_names: Array[Symbol],
     file_category_definitions: Array[FileCategoryDefinition]
@@ -10,7 +10,7 @@ class ConfigurationManager
 
   def initialize
     @fields = Fields.new(
-      project_root: Pathname.new(Dir.pwd),
+      project_dir: Pathname.new(Dir.pwd),
       source_dir: Pathname.new('src'),
       category_names: %i[h hpp cpp].freeze
     )
