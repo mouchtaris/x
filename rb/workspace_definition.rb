@@ -8,9 +8,11 @@ module WorkspaceDefinitionApi
   include TypeComparisons
 
   def find_all(&block)
-    file_category_definitions.to_a.flat_map do |cat|
-      find_category(cat, &block).to_a
-    end
+    file_category_definitions.
+      to_a
+      .flat_map do |cat|
+        find_category(cat, &block).to_a
+      end
   end
 
   def find_category(category)
@@ -24,6 +26,10 @@ module WorkspaceDefinitionApi
     end
   end
 
+  def files(&block)
+    (@__workspace__definition__files ||= find_all).each(&block)
+  end
+
   def registry
     @__workspace_definition__registry ||= {}
   end
@@ -35,6 +41,12 @@ module WorkspaceDefinitionApi
 
   def new_file(name)
     registry[name]
+  end
+
+  def object_files
+    registry.map do |_, file|
+      file.path.to_s + '.o'
+    end
   end
 end
 

@@ -7,6 +7,14 @@ require_relative 'type_comparisons'
 class RendererManager
   include TypeComparisons
 
+  class << self
+    def erb_from(file_path)
+      ERB.new(File.read(file_path.to_s)).tap do |e|
+        e.location = file_path.to_s
+      end
+    end
+  end
+
   #
   # Renderer
   #
@@ -18,8 +26,7 @@ class RendererManager
       type_check(Pathname) { :template_filepath }
 
       @find_file = find_file
-      @erb = ERB.new(File.read(template_filepath))
-        .tap { |erb| erb.location = template_filepath.to_s }
+      @erb = RendererManager.erb_from(template_filepath)
     end
 
     def full_path_dependencies(file)
@@ -67,11 +74,14 @@ class RendererManager
     @renderers[file.category.name]&.render(file)
   end
 
-  def render_prelude
+  def prelude(object_files)
     path = @root + '__prelude.erb'
-    ERB
-      .new(File.read(path))
-      .tap { |e| e.location = path.to_s }
-      .result
+    RendererManager.erb_from(path).result_with_hash \
+      object_files: object_files
+  end
+
+  def outro
+    path = @root + '__outro.erb'
+    RendererManager.erb_from(path).result
   end
 end
