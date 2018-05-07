@@ -9,5 +9,6 @@
 <%= path %>.o: \
   <%= path %> \<%
     dependencies.each do |dep| %>
-  <%= dep %> \ <% end %>
+  <%= dep %> \<% end %>
+
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o <%= path %>.o <%= path %>

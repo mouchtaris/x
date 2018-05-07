@@ -20,15 +20,15 @@ WorkspaceDefinitionSpec.run
 include Control
 cm = ConfigurationManager.new
 @workspace_definition = wsd = cm.workspace_definition
-rdm = RendererManager.new wsd.root + 'rb/templates', wsd.method(:new_file).to_proc, category_names
+rdm = RendererManager.new \
+  wsd.root + 'rb/templates',
+  wsd.files.to_a,
+  wsd.method(:new_file).to_proc,
+  category_names
 
 files = wsd.files
-prelude = rdm.prelude(wsd.object_files)
-content = 
-  files
-    .flat_map(&:dependencies)
-    .map(&wsd.method(:new_file))
-    .map(&rdm.method(:render))
+prelude = rdm.prelude
+content = files.map(&rdm.method(:render))
 outro = rdm.outro
 
 #File.open('GNUmakefile', 'w') do |gmkf|

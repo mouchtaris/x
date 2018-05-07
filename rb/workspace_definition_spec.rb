@@ -10,7 +10,8 @@ module WorkspaceDefinitionSpec
       ]
     end
 
-    def run
+    def run(out = STDERR)
+      @__expect__out = out
       expect { WorkspaceDefinition }.to :respond, :new
       expect { WorkspaceDefinition.new }.to :be, TStructClass
 

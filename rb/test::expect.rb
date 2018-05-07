@@ -8,7 +8,8 @@ class Subject
   include TypeComparisons
   RunResult = Struct.new(:v, :ex)
 
-  def initialize(run)
+  def initialize(out, run)
+    @out = out
     @run = run
   end
 
@@ -62,9 +63,9 @@ class Subject
     holds = pred.call(*args)
     binding.pry unless holds
     if holds
-      puts "|| #{description} ||: ok"
+      @out.puts "|| #{description} ||: ok"
     else
-      puts "|| #{description} ||: FAIL"
+      @out.puts "|| #{description} ||: FAIL"
     end
     # raise (value&.ex || TestError) unless holds
   end
@@ -73,6 +74,6 @@ end
 
 module Expect
   def expect
-    Subject.new(Proc.new)
+    Subject.new(@__expect__out, Proc.new)
   end
 end

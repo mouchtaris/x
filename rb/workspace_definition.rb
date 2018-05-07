@@ -42,12 +42,6 @@ module WorkspaceDefinitionApi
   def new_file(name)
     registry[name]
   end
-
-  def object_files
-    registry.map do |_, file|
-      file.path.to_s + '.o'
-    end
-  end
 end
 
 WorkspaceDefinition = TStruct.with_base WorkspaceDefinitionApi,
