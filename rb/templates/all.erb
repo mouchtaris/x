@@ -11,4 +11,7 @@
     dependencies.each do |dep| %>
   <%= dep %> \<% end %>
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o <%= path %>.o <%= path %>
+	cat <%= path %> | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o <%= path %>.o -xc++ -

@@ -9,6 +9,19 @@ CXXFLAGS  = -pedantic                     \
             -ftemplate-backtrace-limit=0
 LDFLAGS   = -lpthread
 
+ifndef __mk_ready
+
+MAKEFLAGS += --no-builtin-rules
+
+.DEFAULT_GOAL := all
+
+% :
+	@$(MAKE) __mk_ready=1 $@
+
+else
+
+# ...
+
 all: main
 run: all
 	./main
@@ -47,32 +60,47 @@ main: \
                          src/s.cpp.o \
                    src/tagname.cpp.o \
 
+	${CXX} -o main $^ ${LDFLAGS}
+
+endif # __mk_ready
 
 src/async/__common.h.o: \
   src/async/__common.h \
   src/record.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/__common.h.o src/async/__common.h
+	cat src/async/__common.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/__common.h.o -xc++ -
 
 src/async/channel.h.o: \
   src/async/channel.h \
   src/async/lockable.h \
   src/async/signal.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/channel.h.o src/async/channel.h
+	cat src/async/channel.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/channel.h.o -xc++ -
 
 src/async/ec/job.h.o: \
   src/async/ec/job.h \
   src/async/__common.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/ec/job.h.o src/async/ec/job.h
+	cat src/async/ec/job.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/ec/job.h.o -xc++ -
 
 src/async/ec/task.h.o: \
   src/async/ec/task.h \
   src/async/__common.h \
   src/async/ec/job.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/ec/task.h.o src/async/ec/task.h
+	cat src/async/ec/task.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/ec/task.h.o -xc++ -
 
 src/async/ec/task_channel.h.o: \
   src/async/ec/task_channel.h \
@@ -80,14 +108,20 @@ src/async/ec/task_channel.h.o: \
   src/async/channel.h \
   src/async/ec/task.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/ec/task_channel.h.o src/async/ec/task_channel.h
+	cat src/async/ec/task_channel.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/ec/task_channel.h.o -xc++ -
 
 src/async/ec/threadpool/worker.h.o: \
   src/async/ec/threadpool/worker.h \
   src/async/__common.h \
   src/async/ec/task_channel.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/ec/threadpool/worker.h.o src/async/ec/threadpool/worker.h
+	cat src/async/ec/threadpool/worker.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/ec/threadpool/worker.h.o -xc++ -
 
 src/async/ec/threadpool.h.o: \
   src/async/ec/threadpool.h \
@@ -95,79 +129,121 @@ src/async/ec/threadpool.h.o: \
   src/async/ec/threadpool/worker.h \
   src/make_array.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/ec/threadpool.h.o src/async/ec/threadpool.h
+	cat src/async/ec/threadpool.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/ec/threadpool.h.o -xc++ -
 
 src/async/lockable.h.o: \
   src/async/lockable.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/lockable.h.o src/async/lockable.h
+	cat src/async/lockable.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/lockable.h.o -xc++ -
 
 src/async/signal.h.o: \
   src/async/signal.h \
   src/async/lockable.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/signal.h.o src/async/signal.h
+	cat src/async/signal.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/signal.h.o -xc++ -
 
 src/async.h.o: \
   src/async.h \
   src/async/ec/threadpool.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async.h.o src/async.h
+	cat src/async.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async.h.o -xc++ -
 
 src/copy.h.o: \
   src/copy.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/copy.h.o src/copy.h
+	cat src/copy.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/copy.h.o -xc++ -
 
 src/exp/sql.h.o: \
   src/exp/sql.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/exp/sql.h.o src/exp/sql.h
+	cat src/exp/sql.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/exp/sql.h.o -xc++ -
 
 src/json.h.o: \
   src/json.h \
   src/record.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/json.h.o src/json.h
+	cat src/json.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/json.h.o -xc++ -
 
 src/make_array.h.o: \
   src/make_array.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/make_array.h.o src/make_array.h
+	cat src/make_array.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/make_array.h.o -xc++ -
 
 src/model.h.o: \
   src/model.h \
   src/record.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/model.h.o src/model.h
+	cat src/model.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/model.h.o -xc++ -
 
 src/printf.h.o: \
   src/printf.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/printf.h.o src/printf.h
+	cat src/printf.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/printf.h.o -xc++ -
 
 src/record.h.o: \
   src/record.h \
   src/tagged_value.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/record.h.o src/record.h
+	cat src/record.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/record.h.o -xc++ -
 
 src/s.h.o: \
   src/s.h \
   src/printf.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/s.h.o src/s.h
+	cat src/s.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/s.h.o -xc++ -
 
 src/tagged_value/fwd.h.o: \
   src/tagged_value/fwd.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/tagged_value/fwd.h.o src/tagged_value/fwd.h
+	cat src/tagged_value/fwd.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagged_value/fwd.h.o -xc++ -
 
 src/tagged_value/write.h.o: \
   src/tagged_value/write.h \
   src/tagged_value/fwd.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/tagged_value/write.h.o src/tagged_value/write.h
+	cat src/tagged_value/write.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagged_value/write.h.o -xc++ -
 
 src/tagged_value.h.o: \
   src/tagged_value.h \
@@ -175,37 +251,55 @@ src/tagged_value.h.o: \
   src/tagged_value/fwd.h \
   src/tagged_value/write.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/tagged_value.h.o src/tagged_value.h
+	cat src/tagged_value.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagged_value.h.o -xc++ -
 
 src/tagname.h.o: \
   src/tagname.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/tagname.h.o src/tagname.h
+	cat src/tagname.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagname.h.o -xc++ -
 
 src/type.h.o: \
   src/type.h \
   src/tagname.h \
   src/tagged_value.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/type.h.o src/type.h
+	cat src/type.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/type.h.o -xc++ -
 
 src/write\:\:tuple.h.o: \
   src/write\:\:tuple.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/write\:\:tuple.h.o src/write\:\:tuple.h
+	cat src/write\:\:tuple.h | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/write\:\:tuple.h.o -xc++ -
 
 src/async/channel.hpp.o: \
   src/async/channel.hpp \
   src/async/channel.h \
   src/async/signal.hpp \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/channel.hpp.o src/async/channel.hpp
+	cat src/async/channel.hpp | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/channel.hpp.o -xc++ -
 
 src/async/signal.hpp.o: \
   src/async/signal.hpp \
   src/async/signal.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/async/signal.hpp.o src/async/signal.hpp
+	cat src/async/signal.hpp | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async/signal.hpp.o -xc++ -
 
 src/main.cpp.o: \
   src/main.cpp \
@@ -221,17 +315,26 @@ src/main.cpp.o: \
   src/make_array.h \
   src/exp/sql.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/main.cpp.o src/main.cpp
+	cat src/main.cpp | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/main.cpp.o -xc++ -
 
 src/s.cpp.o: \
   src/s.cpp \
   src/s.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/s.cpp.o src/s.cpp
+	cat src/s.cpp | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/s.cpp.o -xc++ -
 
 src/tagname.cpp.o: \
   src/tagname.cpp \
   src/tagname.h \
 
-	${CXX} ${CPPFLAGS} ${CXXFLAGS} -o src/tagname.cpp.o src/tagname.cpp
+	cat src/tagname.cpp | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagname.cpp.o -xc++ -
 

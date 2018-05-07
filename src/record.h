@@ -1,4 +1,5 @@
 #pragma once
+#include <tuple>
 #include "tagged_value.h"
 
 template <
@@ -17,7 +18,7 @@ struct __record__get_from_index_impl
 {
     decltype(auto) operator () (record<tag, fields...> const& rec)
     {
-        return std::get<index>(get(rec));
+        return std::get<index>(tagged_value::get(rec));
     }
 };
 

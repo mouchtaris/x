@@ -11,7 +11,7 @@ namespace async::ec::threadpool
 
         static void do_work(rec data)
         {
-            channel<task::rec>&         taskchan = get(gett<task_channel>(data));
+            channel<task::rec>&         taskchan = tagged_value::get(gett<task_channel>(data));
             std::optional<task::rec>    next_task_opt;
             const auto                  get_next_task = [&next_task_opt, &taskchan] ()
                                         {

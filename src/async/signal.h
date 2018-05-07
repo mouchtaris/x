@@ -1,5 +1,7 @@
 #pragma once
 #include <condition_variable>
+#include <optional>
+#include <functional>
 #include "async/lockable.h"
 
 namespace async
