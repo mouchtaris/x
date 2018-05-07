@@ -23,6 +23,12 @@ module WorkspaceDefinitionApi
       yield SourceFile.new(name: md[:name], path: in_project, category: category) if md
     end
   end
+
+  def new_file(name)
+    SourceFile.new \
+      name: name,
+      path: src + name
+  end
 end
 
 WorkspaceDefinition = TStruct.with_base WorkspaceDefinitionApi,

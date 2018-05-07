@@ -10,6 +10,7 @@ module SourceFileApi
         .lazy
         .map(&category.dependency_rx.method(:match))
         .select(&:itself)
+        .map { |md| md[:name] }
         .to_a
     end
   end

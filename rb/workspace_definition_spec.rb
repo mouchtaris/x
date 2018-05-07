@@ -16,12 +16,15 @@ module WorkspaceDefinitionSpec
 
       expect { WorkspaceDefinition.new }.to :respond, :root
       expect { WorkspaceDefinition.new }.to :respond, :root=
+      expect { WorkspaceDefinition.new }.to :respond, :src
+      expect { WorkspaceDefinition.new }.to :respond, :src=
       expect { WorkspaceDefinition.new }.to :respond, :file_category_definitions
       expect { WorkspaceDefinition.new }.to :respond, :file_category_definitions=
 
       expect { WorkspaceDefinition.new.root = 12 }.to :fail, ArgumentError
       expect { WorkspaceDefinition.new.file_category_definitions = 12 }.to :fail, ArgumentError
       expect { WorkspaceDefinition.new.file_category_definitions = [12] }.to :fail, ArgumentError
+      expect { WorkspaceDefinition.new.templates_dir = [12] }.to :fail, ArgumentError
 
       expect { WorkspaceDefinition.new.root = Pathname.new('/tmp') }.to :be, Pathname
       expect { WorkspaceDefinition.new.file_category_definitions = fcds }.to :be, Array[FileCategoryDefinition]
