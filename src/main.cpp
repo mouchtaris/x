@@ -201,14 +201,14 @@ namespace repo
 
 }
 
-
-template <size_t> void constexprsize(){}
-
-template <typename T, size_t s>
-struct std::tuple_size<T [s]>
+namespace bob
 {
-    static constexpr auto value = s;
-};
+    using namespace sql;
+    using user = table<"users", std::tuple<
+            int,
+            bool
+        >>;
+}
 
 using tagged_value::make;
 using async::ec::task;
