@@ -107,10 +107,9 @@ struct bab
         { };
     template <typename T> struct apply
     {
-        using type = std::vector<T>;
+        using type = std::tuple<T>;
     };
 };
-struct babless;
 //////
 //
 // (((x * 2) + 5)) / 2 - x
@@ -132,9 +131,9 @@ int main(int, char**)
     ec.dispatch(std::move(tsk));
 
     std::cout
-        << tagname::of<typename talg::map<bab, int, bool, std::string>::type>().at(0) << nl
-        << std::is_default_constructible_v<babless> << nl
-        << tagname::of<typename memsql::table_value<typename bob::user::t>::type>().at(0) << nl
+        // << tagname::of<typename memsql::table_value<typename bob::user::t>::type>().at(0) << nl
+        << tagname::of<talg::select_t<bab, int, double, float, void, char, bool>>().at(0) << nl
+        << tagname::of<talg::map_t<bab, int, double, void, char, bool>>().at(0) << nl
         << "";
 
     return 0;

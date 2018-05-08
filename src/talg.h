@@ -53,7 +53,8 @@ namespace talg
         typename ..._tail>
     struct tuple_list<_head, _tail...>
     {
-        using head = _head;
+        template <template <typename...> class F>
+        using apply_head_t = F<_head>;
         template <template <typename...> class F>
         using apply_tail_t = F<_tail...>;
     };
@@ -73,34 +74,84 @@ namespace talg
     ///
 
     template <
+        bool condition,
+        template <typename...> class IfTrue,
+        template <typename...> class IfFalse
+        >
+    struct apply_if_else
+    {
+        template <typename...Args>
+        using apply_t = IfFalse<Args...>;
+    };
+
+    template <
+        template <typename...> class IfTrue,
+        template <typename...> class IfFalse>
+    struct apply_if_else<true, IfTrue, IfFalse>
+    {
+        template <typename...Args>
+        using apply_t = IfTrue<Args...>;
+    };
+
+    template <
+        bool condition,
+        template <typename...> class IfTrue,
+        template <typename...> class IfFalse,
+        typename ...Args
+        >
+    using apply_if_else_t = typename
+        apply_if_else<condition, IfTrue, IfFalse>::
+        template apply_t<Args...>
+        ;
+
+    ///
+    //////
+    ////////////
+    //////
+    ///
+
+    template <
         typename _pf,
         typename ...Args>
     struct select
     {
-        using _head = typename tuple_list<Args...>::head;
+        template <typename ...Args2>
+        using _select_with_pf_t = typename select<_pf, Args2...>::type;
+        using _args_list = tuple_list<Args...>;
+        using _select_tail = typename _args_list::template apply_tail_t<_select_with_pf_t>;
 
-        static constexpr auto is_pf_defined_at_T = pf<_pf>::template is_defined_at<_head>::value;
+        using _f = pf<_pf>;
+        static constexpr bool _is_pf_defined_at_head =
+            _args_list::template apply_head_t<_f::template is_defined_at>::value;
 
-        template <typename ..._tail>
-        using select_with_pf = typename select<_pf, _tail...>::type;
+        template <typename...>
+        using _defined_result = std::tuple<typename _args_list::template apply_head_t<_f::template apply>::type>;
+        template <typename...>
+        using _undefined_result = std::tuple<>;
 
-        using tail_result = typename tuple_list<Args...>::template apply_tail_t<select_with_pf>;
+        using _head_result =
+            apply_if_else_t<
+                _is_pf_defined_at_head,
+                _defined_result,
+                _undefined_result
+            >;
+        using _tail_result = _select_tail;
 
-        template <typename = void>
-        using pf_defined_result =
-            tuple_cat_t<
-                std::tuple< typename pf<_pf>::template apply<_head>::type >,
-                tail_result
-                >;
-
-        using pf_undefined_result = tail_result;
-
+        //
+        //
+        //
         using type =
-            std::conditional_t<
-                is_pf_defined_at_T,
-                pf_defined_result<>,
-                pf_undefined_result
-                >;
+            tuple_cat_t<
+                _head_result,
+                _tail_result
+            >;
+    };
+
+    template <
+        typename _pf>
+    struct select<_pf>
+    {
+        using type = std::tuple<>;
     };
 
     template <typename pf, typename ...Args>
@@ -134,23 +185,6 @@ namespace talg
     ////////////
     //////
     ///
-
-    template <typename pf, typename ...Args>
-    struct find
-    {
-        template <typename ..._Args>
-        using select_pf_t = select_t<pf, _Args...>;
-
-        using type =
-            tuple_elements_t<
-                select_pf_t<Args...>,
-                head_t
-                >
-            ;
-    };
-
-
-
 
     template <
         template <typename ...> class F,
