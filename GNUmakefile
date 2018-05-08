@@ -41,6 +41,7 @@ main: \
                 src/async/signal.h.o \
                        src/async.h.o \
                         src/copy.h.o \
+                  src/exp/memsql.h.o \
                      src/exp/sql.h.o \
                         src/json.h.o \
                   src/make_array.h.o \
@@ -52,6 +53,8 @@ main: \
           src/tagged_value/write.h.o \
                 src/tagged_value.h.o \
                      src/tagname.h.o \
+                        src/talg.h.o \
+           src/tuple\:\:for_each.h.o \
                         src/type.h.o \
               src/write\:\:tuple.h.o \
              src/async/channel.hpp.o \
@@ -179,6 +182,17 @@ src/copy.h.o: \
 	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
 	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/copy.h.o -xc++ -
 
+src/exp/memsql.h.o: \
+  src/exp/memsql.h \
+  src/exp/sql.h \
+  src/talg.h \
+
+	cat src/exp/memsql.h | \
+	  sed -r -e '1a# 1 "src/exp/memsql.h"' | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/exp/memsql.h.o -xc++ -
+
 src/exp/sql.h.o: \
   src/exp/sql.h \
   src/record.h \
@@ -192,6 +206,7 @@ src/exp/sql.h.o: \
 src/json.h.o: \
   src/json.h \
   src/record.h \
+  src/tuple\:\:for_each.h \
 
 	cat src/json.h | \
 	  sed -r -e '1a# 1 "src/json.h"' | \
@@ -287,6 +302,24 @@ src/tagname.h.o: \
 	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
 	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tagname.h.o -xc++ -
 
+src/talg.h.o: \
+  src/talg.h \
+
+	cat src/talg.h | \
+	  sed -r -e '1a# 1 "src/talg.h"' | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/talg.h.o -xc++ -
+
+src/tuple\:\:for_each.h.o: \
+  src/tuple\:\:for_each.h \
+
+	cat src/tuple\:\:for_each.h | \
+	  sed -r -e '1a# 1 "src/tuple\:\:for_each.h"' | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/tuple\:\:for_each.h.o -xc++ -
+
 src/type.h.o: \
   src/type.h \
   src/tagname.h \
@@ -341,6 +374,8 @@ src/main.cpp.o: \
   src/async/channel.hpp \
   src/make_array.h \
   src/exp/sql.h \
+  src/exp/memsql.h \
+  src/talg.h \
 
 	cat src/main.cpp | \
 	  sed -r -e '1a# 1 "src/main.cpp"' | \

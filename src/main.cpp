@@ -14,6 +14,8 @@
 #include "async/channel.hpp"
 #include "make_array.h"
 #include "exp/sql.h"
+#include "exp/memsql.h"
+#include "talg.h"
 
 //////
 //
@@ -43,96 +45,6 @@ decltype(auto) t(Ts&&... args)
 //
 //
 //
-#include <future>
-#include <mutex>
-namespace view
-{
-    template <
-        typename C,
-        typename F>
-    struct map_t
-    {
-        std::reference_wrapper<const C> cont;
-        F f;
-    };
-
-    template <
-        typename C,
-        typename F>
-    struct map_iter_t
-    {
-        using iter_t = std::decay_t<decltype(begin(std::declval<C>()))>;
-        iter_t i;
-        F f;
-
-        decltype(auto) operator != (map_iter_t const& other) const& { return i != other.i; }
-        decltype(auto) operator * () const& { return f(*i); }
-        void operator++() { ++i; }
-
-    };
-
-    template <
-        typename C,
-        typename F>
-    map_iter_t<C, F> begin(map_t<C, F> const& m)
-    {
-        return {
-            begin(m.cont.get()),
-            m.f
-        };
-    }
-
-    template <
-        typename C,
-        typename F>
-    map_iter_t<C, F> end(map_t<C, F> const& m)
-    {
-        return {
-            end(m.cont.get()),
-            m.f
-        };
-    }
-
-    template <
-        typename T,
-        typename F>
-    auto map(std::vector<T> const& vec, F&& f)
-    {
-        return map_t<std::vector<T>, F> {
-            std::ref(vec),
-            std::move(f)
-        };
-    }
-}
-namespace like
-{
-    template <typename> struct future_t;
-    template <typename T> struct future_t<std::future<T>>
-    {
-        using self_t = std::future<T>;
-        self_t& self;
-    };
-
-    template <typename T>
-    future_t<T> future(T& t)
-    {
-        return { t };
-    }
-
-}
-namespace async
-{
-    auto lock(std::mutex& m)
-    {
-        return std::lock_guard<std::mutex> { m };
-    }
-
-}
-
-//////
-//
-//
-//
 namespace vs
 {
     using tagged_value::make;
@@ -146,68 +58,34 @@ namespace vs
 //
 //
 //
-namespace repo
-{
-    struct id: public tagged_value::data<id, std::uint64_t> { };
-
-    template <typename R>
-    using items_t = std::vector<typename R::rec>;
-
-    template <typename R>
-    struct data:
-        public tagged_value::data<
-            data<R>,
-            std::tuple< std::mutex, items_t<R> >
-            >
-    { };
-
-    template <typename R>
-    std::mutex& mutex(data<R>& d) { return std::get<0>(get(d)); }
-
-    template <typename R>
-    items_t<R>& items(data<R>& d) { return std::get<1>(get(d)); }
-
-    template <typename R>
-    using data_t = data<R>;
-
-    template <typename R>
-    struct addjob
-    {
-        using rep_t = std::reference_wrapper<data_t<R>>;
-        using rec_t = typename R::rec;
-        using prom_t = std::promise<id>;
-        static_assert(std::is_move_constructible_v<rep_t>, "");
-        static_assert(std::is_move_constructible_v<rec_t>, "");
-        static_assert(std::is_move_constructible_v<prom_t>, "");
-
-        rep_t rep_ref;
-        rec_t rec;
-        prom_t done;
-
-        void operator()()
-        {
-            data_t<R>& rep = rep_ref.get();
-
-            std::mutex& m = mutex(rep);
-            auto&& _lock = async::lock(m);
-
-            items_t<R>& v = items(rep);
-            v.emplace_back(std::move(rec));
-
-            auto&& i = tagged_value::make<id>(v.size() - 1);
-            done.set_value(std::move(i));
-        }
-    };
-
-}
 
 namespace bob
 {
-    using namespace sql;
-    using user = table<"users", std::tuple<
-            int,
-            bool
-        >>;
+    using namespace sql::sdl;
+
+    struct account 
+    {
+        struct id;
+        struct email;
+
+        using t = table<account,
+            column<id       , col::Int      >,
+            column<email    , col::String   >
+        >;
+    };
+
+    struct user
+    {
+        struct id;
+        struct account_id;
+        struct name;
+
+        using t = table<user,
+            column< id          , col::Int          >,
+            column< account_id  , col::Int          >,
+            column< name        , col::String       >
+        >;
+    };
 }
 
 using tagged_value::make;
@@ -215,6 +93,24 @@ using async::ec::task;
 using async::ec::job;
 using async::ec::task_channel;
 using async::ec::threadpool::worker;
+//////
+//
+//
+struct bab
+{
+    template <typename T> struct is_defined_at:
+        public std::conditional_t<
+            std::is_same_v<T, float>,
+            std::false_type,
+            std::true_type
+            >
+        { };
+    template <typename T> struct apply
+    {
+        using type = std::vector<T>;
+    };
+};
+struct babless;
 //////
 //
 // (((x * 2) + 5)) / 2 - x
@@ -229,6 +125,17 @@ void count_to_xilia() {
 int main(int, char**)
 {
     auto ec = async::ec::threadpool::make<3u>();
-    ec.dispatch(make_record<task>(make<task::name>("Task1"), make<job>([](){s("And this is it");})));
+    auto&& jb = make<job>([]() {
+    });
+    auto&& task_name = make<task::name>("Task1");
+    auto&& tsk = make_record<task>(std::move(task_name), std::move(jb));
+    ec.dispatch(std::move(tsk));
+
+    std::cout
+        << tagname::of<typename talg::map<bab, int, bool, std::string>::type>().at(0) << nl
+        << std::is_default_constructible_v<babless> << nl
+        << tagname::of<typename memsql::table_value<typename bob::user::t>::type>().at(0) << nl
+        << "";
+
     return 0;
 }

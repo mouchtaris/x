@@ -63,7 +63,7 @@ namespace async
 
     template <typename T>
     auto end(channel<T>& chan)
-    { 
+    {
         return channel_iterator<channel<T>> { std::ref(chan), std::nullopt };
     }
 }

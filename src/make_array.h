@@ -7,7 +7,7 @@ template <
 constexpr auto __make_array__impl(
     std::index_sequence<n...>,
     C&& construct
-) 
+)
     ->  std::array<
             std::invoke_result_t<C, std::size_t>,
             sizeof...(n)>

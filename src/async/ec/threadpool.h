@@ -46,7 +46,7 @@ namespace async::ec::threadpool
     };
 
     template <size_t size>
-    using data_t = data<size>; 
+    using data_t = data<size>;
 
     template <size_t size>
     auto make()

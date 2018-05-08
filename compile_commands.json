@@ -259,6 +259,25 @@
       "-ftemplate-backtrace-limit=0",
       "-c",
       "-o",
+      "src/exp/memsql.o",
+      "src/exp/memsql.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/exp/memsql.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
       "src/exp/sql.o",
       "src/exp/sql.h"
     ],
@@ -511,6 +530,44 @@
     ],
     "directory": "/home/nikos/op/x",
     "file": "src/tagname.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/talg.o",
+      "src/talg.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/talg.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/tuple::for_each.o",
+      "src/tuple::for_each.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/tuple::for_each.h"
   },
   {
     "arguments": [

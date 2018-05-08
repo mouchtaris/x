@@ -1,5 +1,6 @@
 #pragma once
 #include "record.h"
+#include "tuple::for_each.h"
 #include <functional>
 
 namespace json
@@ -67,19 +68,6 @@ namespace json
         if (!is_last)
             o << ',';
         o << '\n';
-    }
-
-    template <
-        size_t ...Is,
-        typename F,
-        typename Tuple
-        >
-    void for_each(
-        Tuple&& t,
-        F f,
-        std::index_sequence<Is...>)
-    {
-        ( f(std::get<Is>(t), Is == sizeof...(Is) - 1) , ... );
     }
 
     template <
