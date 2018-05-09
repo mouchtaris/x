@@ -82,6 +82,11 @@ namespace memsql
     //////
     ///
 
+    template <
+        typename name,
+        typename ...columns>
+    using table_value_t = record<tag::table_value<name>, typename column<columns>::tagged_t ... >;
+
     template <typename _table> struct table;
     template <
         typename name,
@@ -90,7 +95,7 @@ namespace memsql
     {
         struct value
         {
-            using rec = record<tag::table_value<name>, typename column<columns>::tagged_t ... >;
+            using rec = table_value_t<name, columns...>;
         };
 
         template <size_t i>
@@ -107,9 +112,9 @@ namespace memsql
         typename _column,
         typename _table_name,
         typename ..._values>
-    auto const& gett(record<memsql::tag::table_value<_table_name>, _values...> const& r)
+    auto gett(record<memsql::tag::table_value<_table_name>, _values...> const& r)
+        -> typename _column::tagged_t
     {
         return ::gett<typename _column::tagged_t>(r);
     }
 }
-

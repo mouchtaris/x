@@ -12,6 +12,8 @@ namespace sdl {
         typename ...attributes>
     struct column { };
 
+    struct primary_key;
+
     namespace col
     {
         struct Int { };

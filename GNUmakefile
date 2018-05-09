@@ -43,8 +43,10 @@ main: \
               src/async/lockable.h.o \
                 src/async/signal.h.o \
                        src/async.h.o \
+                         src/bob.h.o \
                         src/copy.h.o \
                   src/exp/memsql.h.o \
+              src/exp/memsqlrepo.h.o \
               src/exp/sql/is_col.h.o \
                  src/exp/sql/sdl.h.o \
                      src/exp/sql.h.o \
@@ -178,6 +180,16 @@ src/async.h.o: \
 	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
 	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/async.h.o -xc++ -
 
+src/bob.h.o: \
+  src/bob.h \
+  src/exp/sql.h \
+
+	cat src/bob.h | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  sed -r -e '1a# 1 "src/bob.h"' | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/bob.h.o -xc++ -
+
 src/copy.h.o: \
   src/copy.h \
 
@@ -191,12 +203,23 @@ src/exp/memsql.h.o: \
   src/exp/memsql.h \
   src/exp/sql.h \
   src/talg.h \
+  src/record.h \
 
 	cat src/exp/memsql.h | \
 	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
 	  sed -r -e '1a# 1 "src/exp/memsql.h"' | \
 	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
 	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/exp/memsql.h.o -xc++ -
+
+src/exp/memsqlrepo.h.o: \
+  src/exp/memsqlrepo.h \
+  src/exp/memsql.h \
+
+	cat src/exp/memsqlrepo.h | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
+	  sed -r -e '1a# 1 "src/exp/memsqlrepo.h"' | \
+	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
+	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o src/exp/memsqlrepo.h.o -xc++ -
 
 src/exp/sql/is_col.h.o: \
   src/exp/sql/is_col.h \
@@ -389,6 +412,7 @@ src/async/signal.hpp.o: \
 
 src/main.cpp.o: \
   src/main.cpp \
+  src/tagged_value/write.h \
   src/write\:\:tuple.h \
   src/type.h \
   src/printf.h \
@@ -402,6 +426,8 @@ src/main.cpp.o: \
   src/exp/sql.h \
   src/exp/memsql.h \
   src/talg.h \
+  src/exp/memsqlrepo.h \
+  src/bob.h \
 
 	cat src/main.cpp | \
 	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \

@@ -240,6 +240,25 @@
       "-ftemplate-backtrace-limit=0",
       "-c",
       "-o",
+      "src/bob.o",
+      "src/bob.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/bob.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
       "src/copy.o",
       "src/copy.h"
     ],
@@ -264,6 +283,25 @@
     ],
     "directory": "/home/nikos/op/x",
     "file": "src/exp/memsql.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/exp/memsqlrepo.o",
+      "src/exp/memsqlrepo.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/exp/memsqlrepo.h"
   },
   {
     "arguments": [
