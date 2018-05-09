@@ -3,10 +3,13 @@ CXXFLAGS  = -pedantic                     \
             -std=c++1z                    \
             -Wall                         \
             -Wextra                       \
+            -Weffc++                      \
             -O0                           \
             -g                            \
             -Isrc                         \
-            -ftemplate-backtrace-limit=0
+            -ftemplate-backtrace-limit=0  \
+            -fdiagnostics-show-option     \
+
 LDFLAGS   = -lpthread
 
 ifndef __mk_ready

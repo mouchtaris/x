@@ -278,6 +278,44 @@
       "-ftemplate-backtrace-limit=0",
       "-c",
       "-o",
+      "src/exp/sql/is_col.o",
+      "src/exp/sql/is_col.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/exp/sql/is_col.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
+      "src/exp/sql/sdl.o",
+      "src/exp/sql/sdl.h"
+    ],
+    "directory": "/home/nikos/op/x",
+    "file": "src/exp/sql/sdl.h"
+  },
+  {
+    "arguments": [
+      "g++",
+      "-pedantic",
+      "-std=c++1z",
+      "-Wall",
+      "-Wextra",
+      "-O0",
+      "-g",
+      "-Isrc",
+      "-ftemplate-backtrace-limit=0",
+      "-c",
+      "-o",
       "src/exp/sql.o",
       "src/exp/sql.h"
     ],

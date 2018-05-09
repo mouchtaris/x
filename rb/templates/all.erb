@@ -12,7 +12,7 @@
   <%= dep %> \<% end %>
 
 	cat <%= path %> | \
+	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
 	  sed -r -e '1a# 1 "<%= path %>"' | \
 	  sed -r -e '$$anamespace { static const auto __file_name = __FILE__\; }' | \
-	  grep -v -E -e '^[[:space:]]*\#[[:space:]]*pragma[[:space:]]*once' | \
 	  ${CXX} ${CPPFLAGS} ${CXXFLAGS} -c -pipe -o <%= path %>.o -xc++ -

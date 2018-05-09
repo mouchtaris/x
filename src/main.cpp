@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <sstream>
+#include "tagged_value/write.h"
 #include "write::tuple.h"
 #include "type.h"
 #include "printf.h"
@@ -131,9 +132,32 @@ int main(int, char**)
     ec.dispatch(std::move(tsk));
 
     std::cout
-        // << tagname::of<typename memsql::table_value<typename bob::user::t>::type>().at(0) << nl
         << tagname::of<talg::select_t<bab, int, double, float, void, char, bool>>().at(0) << nl
         << tagname::of<talg::map_t<bab, int, double, void, char, bool>>().at(0) << nl
+        << tagname::of<talg::map_t<bab, int, double, void, char, bool>>().at(0) << nl
+        << tagname::of<talg::find_t<talg::is_same_pf<double>, int, double, void, char, bool>>().at(0) << nl
+        << tagname::of<typename memsql::table<typename bob::user::t>::value>().at(0) << nl
+        << "";
+
+    using user_t = memsql::table<bob::user::t>;
+    using user_id_c = user_t::get_column<0>;
+    using user_account_id_c = user_t::get_column<1>;
+    using user_name_c = user_t::get_column<2>;
+
+    auto&& luser = user_t::create(
+        user_id_c::create(12),
+        user_account_id_c::create(28),
+        user_name_c::create("LOL")
+    );
+    //write::tuple(std::cout, luser) << nl;
+    auto&& id_v = user_id_c::create(12);
+    auto&& account_id_v = user_account_id_c::create(28);
+    auto&& name_v = user_name_c::create("PAP");
+    std::cout
+        << id_v << nl
+        << account_id_v << nl
+        << name_v << nl
+        << memsql::gett<user_name_c>(luser) << nl
         << "";
 
     return 0;

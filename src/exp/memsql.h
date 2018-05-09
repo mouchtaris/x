@@ -1,6 +1,7 @@
 #pragma once
 #include "exp/sql.h"
 #include "talg.h"
+#include "record.h"
 #include <cstdint>
 #include <string>
 
@@ -17,69 +18,98 @@ namespace memsql
     template <>
     struct column<sql::sdl::col::String>
     {
-        using native_t = std::wstring;
+        using native_t = std::string;
     };
 
+    ///
+    //////
+    /////////
+    //////
+    ///
 
+    namespace tag
+    {
+        template <typename name> struct column_value;
+        template <typename name> struct table_value;
+    }
 
-    template <typename _column> struct column;
+    ///
+    //////
+    /////////
+    //////
+    ///
+
+    struct is_col_pf
+    {
+        template <typename T>
+        struct _detail
+        {
+            template <typename ...cols>
+            using is_col_f = std::disjunction< std::is_same<T, cols> ... >;
+
+            using is_col = sql::sdl::col::apply_cols_t<is_col_f>;
+        };
+
+        template <typename T>
+        struct is_defined_at:
+            public _detail<T>::is_col
+        { };
+
+        template <typename T>
+        struct apply
+        {
+            using type = typename _detail<T>::is_col;
+        };
+    };
+
     template <
         typename _name,
         typename ..._attrs>
     struct column<sql::sdl::column<_name, _attrs...>>
     {
-        using name = _name;
-        template <template <typename...> class F>
-        using apply_attributes_t = F<_attrs...>;
+        using name      = _name;
+
+        using type      = talg::find_t<is_col_pf, _attrs...>;
+        using native_t  = typename column<type>::native_t;
+        using tagged_t  = tagged_value::data<tag::column_value<name>, native_t>;
+
+        static tagged_t     create(native_t v) { return tagged_value::make<tagged_t>(std::move(v)); }
     };
 
-
+    ///
+    //////
+    /////////
+    //////
+    ///
 
     template <typename _table> struct table;
     template <
-        typename _name,
+        typename name,
         typename ...columns>
-    struct table<sql::sdl::table<_name, columns...>>
+    struct table<sql::sdl::table<name, columns...>>
     {
-        using name = _name;
+        struct value
+        {
+            using rec = record<tag::table_value<name>, typename column<columns>::tagged_t ... >;
+        };
 
-        template <template <typename...> class F>
-        using apply_columns_t = F<columns...>;
+        template <size_t i>
+        using get_column = column<std::tuple_element_t<i, std::tuple<columns...>>>;
+
+        template <typename ...Args>
+        static typename value::rec create(Args&&... args)
+        {
+            return make_record<value>(std::forward<Args>(args) ...);
+        }
     };
 
     template <
-        typename _table>
-    struct table_value
+        typename _column,
+        typename _table_name,
+        typename ..._values>
+    auto const& gett(record<memsql::tag::table_value<_table_name>, _values...> const& r)
     {
-        struct to_native_type
-        {
-            template <typename T>
-            struct is_defined_at:
-                public std::conditional_t<
-                    std::is_default_constructible_v<column<T>>,
-                    std::true_type,
-                    std::false_type
-                >
-            { };
-
-            template <typename T>
-            struct apply
-            {
-                template <typename = void> using defined_type = typename column<T>::native_t;
-                using undefined_type = void;
-
-                using type =
-                    std::conditional_t<
-                        is_defined_at<T>::value,
-                        defined_type<>,
-                        undefined_type
-                    >;
-            };
-        };
-
-        template <typename ...Args>
-        using map_to_native_type = talg::map_t<to_native_type, Args...>;
-
-        using type = typename table<_table>::template apply_columns_t<map_to_native_type>;
-    };
+        return ::gett<typename _column::tagged_t>(r);
+    }
 }
+

@@ -186,6 +186,50 @@ namespace talg
     //////
     ///
 
+    template <typename _pf>
+    struct _find_pf
+    {
+        template <typename T>
+        struct is_defined_at:
+            public pf<_pf>::template is_defined_at<T>
+        { };
+
+        template <typename T>
+        struct apply
+        {
+            struct type
+            {
+                using from_t = T;
+                using to_t = typename pf<_pf>::template apply<T>::type;
+            };
+        };
+    };
+
+    template <
+        typename pf,
+        typename ...Args>
+    struct find
+    {
+        using _select_result_list = tuple_elements_t<
+            select_t<_find_pf<pf>, Args...>,
+            tuple_list
+        >;
+
+        template <typename T> using _itself = T;
+        using type = typename _select_result_list::template apply_head_t<_itself>::from_t;
+    };
+
+    template <
+        typename pf,
+        typename ...Args>
+    using find_t = typename find<pf, Args...>::type;
+
+    ///
+    //////
+    ////////////
+    //////
+    ///
+
     template <
         template <typename ...> class F,
         typename ...Args>
@@ -196,5 +240,26 @@ namespace talg
         {
             using type = F<Args..., Args2...>;
         };
+    };
+
+    ///
+    //////
+    ////////////
+    //////
+    ///
+
+    template <
+        typename T>
+    struct is_same_pf
+    {
+        template <typename U>
+        struct _detail:
+            public std::is_same<T, U>
+        {
+            using type = _detail<U>;
+        };
+
+        template <typename U> using is_defined_at = _detail<U>;
+        template <typename U> using apply = _detail<U>;
     };
 }

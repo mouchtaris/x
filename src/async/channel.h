@@ -31,6 +31,7 @@ namespace async
     template <typename _Chan>
     struct channel_iterator
     {
+        using this_t        = channel_iterator<_Chan>;
         using channel_t     = _Chan;
         using value_t       = typename channel_t::value_t;
         using parent_t      = std::reference_wrapper<channel_t>;
@@ -45,9 +46,10 @@ namespace async
                             {
                                 return is_end() != other.is_end();
                             }
-        void                operator ++() &
+        this_t&             operator ++() &
                             {
                                 _value_opt = _parent.get().pull();
+                                return *this;
                             }
         value_t             operator *() const&
                             {
