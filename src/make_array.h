@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MAKE_ARRAY_H__
+#define __MAKE_ARRAY_H__
 #include <array>
 
 template <
@@ -27,3 +28,4 @@ constexpr auto make_array(
         std::forward<C>(construct)
     );
 }
+#endif // __MAKE_ARRAY_H__

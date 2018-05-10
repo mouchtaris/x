@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __JSON_H__
+#define __JSON_H__
 #include "record.h"
 #include "tuple::for_each.h"
 #include <functional>
@@ -88,3 +89,4 @@ namespace json
     }
 
 }
+#endif // __JSON_H__

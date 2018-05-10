@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__EC__THREADPOOL__WORKER_H__
+#define __ASYNC__EC__THREADPOOL__WORKER_H__
 #include "async/__common.h"
 #include "async/ec/task_channel.h"
 
@@ -34,3 +35,4 @@ namespace async::ec::threadpool
     };
 
 }
+#endif // __ASYNC__EC__THREADPOOL__WORKER_H__

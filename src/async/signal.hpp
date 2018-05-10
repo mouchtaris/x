@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__SIGNAL_HPP__
+#define __ASYNC__SIGNAL_HPP__
 #include "async/signal.h"
 
 namespace async
@@ -50,3 +51,4 @@ namespace async
         __notify_all(lock);
     }
 }
+#endif // __ASYNC__SIGNAL_HPP__

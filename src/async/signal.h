@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__SIGNAL_H__
+#define __ASYNC__SIGNAL_H__
 #include <condition_variable>
 #include <optional>
 #include <functional>
@@ -27,3 +28,4 @@ namespace async
         void close          (           ) &;
     };
 }
+#endif // __ASYNC__SIGNAL_H__

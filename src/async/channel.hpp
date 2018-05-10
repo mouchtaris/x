@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__CHANNEL_HPP__
+#define __ASYNC__CHANNEL_HPP__
 #include "async/channel.h"
 #include "async/signal.hpp"
 
@@ -28,3 +29,4 @@ namespace async
         return std::nullopt;
     }
 }
+#endif // __ASYNC__CHANNEL_HPP__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__LOCKABLE_H__
+#define __ASYNC__LOCKABLE_H__
 #include <mutex>
 
 namespace async
@@ -15,3 +16,4 @@ namespace async
     };
 
 }
+#endif // __ASYNC__LOCKABLE_H__

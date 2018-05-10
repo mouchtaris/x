@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__EC__TASK_H__
+#define __ASYNC__EC__TASK_H__
 #include "async/__common.h"
 #include "async/ec/job.h"
 
@@ -14,3 +15,4 @@ namespace async::ec
         >;
     };
 }
+#endif // __ASYNC__EC__TASK_H__

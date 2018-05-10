@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __WRITE__TUPLE_H__
+#define __WRITE__TUPLE_H__
 #include <tuple>
 #include <ostream>
 
@@ -60,3 +61,4 @@ std::ostream& operator <<(std::ostream& o, std::tuple<Ts...> const& t)
 {
     return write::tuple(o, t);
 }
+#endif // __WRITE__TUPLE_H__

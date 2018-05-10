@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ASYNC__CHANNEL_H__
+#define __ASYNC__CHANNEL_H__
+
 #include "async/lockable.h"
 #include "async/signal.h"
 #include <vector>
@@ -69,3 +71,5 @@ namespace async
         return channel_iterator<channel<T>> { std::ref(chan), std::nullopt };
     }
 }
+
+#endif // __ASYNC__CHANNEL_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TAGGED_VALUE__WRITE_H__
+#define __TAGGED_VALUE__WRITE_H__
 #include <ostream>
 #include "tagged_value/fwd.h"
 
@@ -23,3 +24,4 @@ std::ostream& write_tagged_value(
 {
     return o << name(d) << '[' << get(d) << ']';
 }
+#endif // __TAGGED_VALUE__WRITE_H__

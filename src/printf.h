@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PRINTF_H__
+#define __PRINTF_H__
 #include <array>
 #include <tuple>
 #include <cstdio>
@@ -80,3 +81,4 @@ namespace sprint
     template <size_t bs> bool s(view_t<bs> v, char const*           fmt, int i  ) { return __s__common(v, fmt   , i             ); }
     template <size_t bs> bool s(view_t<bs> v, std::string const&    str         ) { return __s__common(v, "%s"  , str.c_str()   ); }
 }
+#endif // __PRINTF_H__

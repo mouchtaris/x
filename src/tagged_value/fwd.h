@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TAGGED_VALUE__FWD_H__
+#define __TAGGED_VALUE__FWD_H__
 
 namespace tagged_value
 {
@@ -7,3 +8,4 @@ namespace tagged_value
         typename _value_type>
     struct data;
 }
+#endif // __TAGGED_VALUE__FWD_H__

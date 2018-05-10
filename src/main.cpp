@@ -8,7 +8,6 @@
 #include "type.h"
 #include "printf.h"
 #include "s.h"
-#include "model.h"
 #include "copy.h"
 #include "json.h"
 #include "async.h"
@@ -101,11 +100,30 @@ int main(int, char**)
         << id_v << nl
         << account_id_v << nl
         << name_v << nl
-        << memsql::gett<user_name_c>(luser) << nl
-        << bob::id(luser) << nl
+        // << memsql::gett<user_name_c>(luser) << nl
+        // << bob::id(luser) << nl
         << "";
 
     memsqlrepo::repo<bob::user::t> r;
+
+    talg::bind<std::is_same, int>::apply<int>::type b;
+    std::cout
+        // << tagname::of<user_id_c::is_primary_key>().at(0) << nl
+        //<< talg::pred_pf<
+        //        talg::bind<
+        //            memsql::column_is_primary_key,
+        //            name >::template apply
+        //   >,
+        //<< tagname::of<user_t::primary_key>().at(0) << nl
+        << tagname::of<
+                talg::bind<
+                    std::is_same,
+                    sql::sdl::primary_key
+                >::apply<sql::sdl::primary_key>
+                ::type
+
+            >().at(0) << nl
+        << "";
 
     return 0;
 }

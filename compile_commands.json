@@ -430,25 +430,6 @@
       "-ftemplate-backtrace-limit=0",
       "-c",
       "-o",
-      "src/model.o",
-      "src/model.h"
-    ],
-    "directory": "/home/nikos/op/x",
-    "file": "src/model.h"
-  },
-  {
-    "arguments": [
-      "g++",
-      "-pedantic",
-      "-std=c++1z",
-      "-Wall",
-      "-Wextra",
-      "-O0",
-      "-g",
-      "-Isrc",
-      "-ftemplate-backtrace-limit=0",
-      "-c",
-      "-o",
       "src/printf.o",
       "src/printf.h"
     ],

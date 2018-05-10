@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TALG_H__
+#define __TALG_H__
 #include <type_traits>
 #include <tuple>
 
@@ -231,6 +232,27 @@ namespace talg
     ///
 
     template <
+        typename pf,
+        typename ...Args>
+    using contains_t =
+        std::conditional_t<
+            std::tuple_size_v< select_t<pf, Args...> > == 0,
+            std::true_type,
+            std::false_type
+        >;
+
+    template <
+        typename pf,
+        typename ...Args>
+    static constexpr bool contains_v = contains_t<pf, Args...>::value;
+
+    ///
+    //////
+    ////////////
+    //////
+    ///
+
+    template <
         template <typename ...> class F,
         typename ...Args>
     struct bind
@@ -248,6 +270,59 @@ namespace talg
     //////
     ///
 
+    ///
+    //////
+    ////////////
+    //////
+    ///
+
+    template <
+        template <typename...> class F,
+        typename well_formed,
+        typename ...Args
+        >
+    struct _wrap_pf__detail
+    {
+        using is_defined_at_t = std::false_type;
+        struct apply_t
+        {
+        };
+    };
+
+    template <
+        template <typename...> class F>
+    struct wrap_pf
+    {
+    };
+
+    template <
+        template <typename...> class Pred
+        >
+    struct pred_pf
+    {
+        template <typename ...Args>
+        struct _detail
+        {
+            using result_t = std::conditional_t<
+                static_cast<bool>(Pred<Args...>::value),
+                std::true_type,
+                std::false_type
+            >;
+        };
+
+        template <typename ...Args>
+        struct is_defined_at:
+            public _detail<Args...>::result_t
+        {
+        };
+
+        template <typename ...Args>
+        struct apply
+        {
+            using type = typename _detail<Args...>::result_t;
+        };
+    };
+
     template <
         typename T>
     struct is_same_pf
@@ -263,3 +338,4 @@ namespace talg
         template <typename U> using apply = _detail<U>;
     };
 }
+#endif // __TALG_H__

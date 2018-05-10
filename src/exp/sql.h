@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SQL_H__
+#define __SQL_H__
 #include "record.h"
 #include "exp/sql/sdl.h"
 #include "exp/sql/is_col.h"
@@ -13,3 +14,4 @@ namespace sql
     }
 
 }
+#endif // __SQL_H__

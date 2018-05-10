@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __IS_COL_H__
+#define __IS_COL_H__
 #include <type_traits>
 #include "exp/sql/sdl.h"
 
@@ -18,3 +19,4 @@ namespace sql
         public sdl::col::apply_cols_t<_is_col_detail<T>::template with_cols>
     { };
 }
+#endif // __IS_COL_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __BOB_H__
+#define __BOB_H__
 #include "exp/sql.h"
 #include "exp/memsql.h"
 #include <functional>
@@ -7,7 +8,7 @@ namespace bob
 {
     using namespace sql::sdl;
 
-    struct account 
+    struct account
     {
         struct id;
         struct email;
@@ -42,8 +43,9 @@ namespace bob
         return memsql::gett<column_t>(t);
     }
 
-    inline decltype(auto) id(memsql::table<user::t>::value::rec const& u)
-    {
-        return _shortcut<user::t, 0>(u);
-    }
+    //inline decltype(auto) id(memsql::table<user::t>::value::rec const& u)
+    //{
+    //    return _shortcut<user::t, 0>(u);
+    //}
 }
+#endif // __BOB_H__

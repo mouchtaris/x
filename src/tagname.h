@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TAGNAME_H__
+#define __TAGNAME_H__
 #include <array>
 #include <string>
 
@@ -20,3 +21,4 @@ namespace tagname
         };
     }
 }
+#endif // __TAGNAME_H__

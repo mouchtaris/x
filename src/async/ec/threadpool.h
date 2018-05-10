@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ASYNC__EC__THREADPOOL_H__
+#define __ASYNC__EC__THREADPOOL_H__
 #include "async/__common.h"
 #include "async/ec/threadpool/worker.h"
 #include "make_array.h"
@@ -54,3 +55,4 @@ namespace async::ec::threadpool
         return data_t<size> { };
     }
 }
+#endif // __ASYNC__EC__THREADPOOL_H__

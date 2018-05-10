@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MEMSQL_H__
+#define __MEMSQL_H__
 #include "exp/sql.h"
 #include "talg.h"
 #include "record.h"
@@ -74,7 +75,20 @@ namespace memsql
         using tagged_t  = tagged_value::data<tag::column_value<name>, native_t>;
 
         static tagged_t     create(native_t v) { return tagged_value::make<tagged_t>(std::move(v)); }
+
+        //using is_primary_key =
+        //    talg::contains_t<
+        //        talg::pred_pf<
+        //            talg::bind<std::is_same, sql::sdl::primary_key>::template apply
+        //        >,
+        //        _attrs...
+        //    >;
     };
+
+    template <
+        typename _name,
+        typename ..._attrs>
+    using column_is_primary_key = typename column<sql::sdl::column<_name, _attrs...>>::is_primary_key;
 
     ///
     //////
@@ -101,6 +115,19 @@ namespace memsql
         template <size_t i>
         using get_column = column<std::tuple_element_t<i, std::tuple<columns...>>>;
 
+        using primary_key =
+#           if 0
+            talg::find_t<
+                talg::pred_pf<
+                    talg::bind<column_is_primary_key, name>::template apply
+                >,
+                columns...
+            >
+#           else
+            int
+#           endif
+            ;
+
         template <typename ...Args>
         static typename value::rec create(Args&&... args)
         {
@@ -118,3 +145,4 @@ namespace memsql
         return ::gett<typename _column::tagged_t>(r);
     }
 }
+#endif // __MEMSQL_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SQL__SDL_H__
+#define __SQL__SDL_H__
 
 namespace sql {
 namespace sdl {
@@ -26,3 +27,4 @@ namespace sdl {
         >;
     }
 }}
+#endif // __SQL__SDL_H__

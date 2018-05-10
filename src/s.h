@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __S_H__
+#define __S_H__
 #include <utility>
 #include "printf.h"
 
@@ -42,5 +43,4 @@ void s(T&& t, Ts&&... ts)
     __s::s(std::forward<T>(t));
     s(std::forward<Ts>(ts)...);
 }
-
-
+#endif // __S_H__

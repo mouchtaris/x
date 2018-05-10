@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TAGGED_VALUE_H__
+#define __TAGGED_VALUE_H__
 #include "tagname.h"
 #include "tagged_value/fwd.h"
 #include "tagged_value/write.h"
@@ -81,3 +82,4 @@ namespace tagged_value
     }
 
 }
+#endif // __TAGGED_VALUE_H__

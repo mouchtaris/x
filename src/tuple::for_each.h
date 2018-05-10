@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TUPLE__FOR_EACH_H__
+#define __TUPLE__FOR_EACH_H__
 #include <utility>
 
 template <
@@ -41,3 +42,4 @@ void for_each(Tuple&& t, F f)
         std::make_index_sequence<std::tuple_size<tuple_t>::value> { }
     );
 }
+#endif // __TUPLE__FOR_EACH_H__

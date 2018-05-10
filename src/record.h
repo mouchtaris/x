@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RECORD_H__
+#define __RECORD_H__
 #include <tuple>
 #include "tagged_value.h"
 
@@ -58,4 +59,4 @@ decltype(auto) make_record(Args&&... args)
         }
     };
 }
-
+#endif // __RECORD_H__
