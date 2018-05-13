@@ -1,0 +1,14 @@
+<%
+# |==============|
+# |              |
+# | Path         |  ::  < %= path % >
+# | Dependencies |  ::  < %= dependencies.join ' ' % >
+# |              |
+# |==============|
+%>
+<%= path %>.o: \
+  <%= path %> \<%
+    dependencies.each do |dep| %>
+  <%= dep %> \<% end %>
+
+	${CXX} ${CPPFLAGS} ${CXXFLAGS} -xc++ -pipe -c -o <%= path %>.o -xc++ <%= path %>

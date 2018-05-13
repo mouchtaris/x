@@ -1,0 +1,44 @@
+CXX       = g++
+CXXFLAGS  = -pedantic                     \
+            -std=c++1z                    \
+            -Wall                         \
+            -Wextra                       \
+            -Weffc++                      \
+            -O0                           \
+            -g                            \
+            -Isrc                         \
+            -ftemplate-backtrace-limit=0  \
+            -fdiagnostics-show-option     \
+
+LDFLAGS   = -lpthread
+
+ifndef __mk_ready
+
+MAKEFLAGS += --no-builtin-rules
+
+.DEFAULT_GOAL := all
+
+% :
+	@$(MAKE) __mk_ready=1 $@
+
+else
+
+# ...
+
+all: main
+run: all
+	./main
+clean:
+	find src -iname '*.o' -print0 | xargs -0 rm -rvf
+.PHONY: all run clean
+
+main: \<%
+  max_len = object_files.map(&:length).max
+  object_files.each do |objf| %>
+  <%= sprintf("%#{max_len}s", objf) %> \<%
+  end
+%>
+
+	${CXX} -o main $^ ${LDFLAGS}
+
+endif # __mk_ready
