@@ -11,6 +11,8 @@ template <
     typename V>
 using forward_t = decltype(std::forward<T>(std::declval<V>()));
 
+
+
 template <
     typename T,
     typename M>
@@ -91,7 +93,11 @@ auto get(T&& t)
         as_tv<std::decay_t<T>>::is::value,
         forward_member_t<
             forward_t<T, decltype(t)>,
-            typename as_tv<std::decay_t<T>>::type
+            std::conditional_t<
+                std::is_const_v<std::remove_reference_t<T>>,
+                std::add_const_t<typename as_tv<std::decay_t<T>>::type>,
+                typename as_tv<std::decay_t<T>>::type
+            >
         >
     >
 {
@@ -100,9 +106,27 @@ auto get(T&& t)
 
 using tests_t = const std::initializer_list<std::tuple<char const*, std::function<bool()>>>;
 tests_t tests = {
-    t("tv value eq original value", []() {
-        struct age;
-        static_assert(::tv<age, int> { 12 }.v == 12, "");
+    t("forward_t of rvalue is T&&", []() {
+        struct T;
+        static_assert( std::is_same_v< forward_t<T, T&&>, T&& >, "");
+        static_assert( std::is_same_v< forward_t<T, T>, T&& >, "");
+        return true;
+    }),
+    t("forward_t of lvalue is T&", []() {
+        struct T;
+        static_assert( std::is_same_v< forward_t<T&, T&>, T& >, "");
+        return true;
+    }),
+    t("forward_member_t of rvalue is T", []() {
+        struct T;
+        using t = forward_member_t<T, T>;
+        static_assert( std::is_same_v< t, T >, "");
+        return true;
+    }),
+    t("forward_member_t of lvalue is T&", []() {
+        struct T;
+        using t = forward_member_t<T&, T>;
+        static_assert( std::is_same_v< t, T& >, "");
         return true;
     }),
     t("assigning same base-value tv-s to different tag tv-s is not well formed", []() {
@@ -174,6 +198,24 @@ tests_t tests = {
         using tv_t = tv<tag, val_t>;
         using get_t = decltype(get(std::declval<tv_t&&>()));
         static_assert( std::is_same_v< get_t, val_t >, "");
+        return true;
+    }),
+    t("get(tv const&) is of type const T&", []() {
+        struct tag;
+        struct val_t { };
+        using tv_t = tv<tag, val_t>;
+        using get_t = decltype(get(std::declval<tv_t const&>()));
+        using expected_t = const val_t&;
+        static_assert( std::is_same_v< get_t, expected_t>, "");
+        return true;
+    }),
+    t("get(tv const) is of type const T", []() {
+        struct tag;
+        struct val_t { };
+        using tv_t = tv<tag, val_t>;
+        using get_t = decltype(get(std::declval<tv_t const>()));
+        using expected_t = const val_t;
+        static_assert( std::is_same_v< get_t, expected_t>, "");
         return true;
     }),
 };
